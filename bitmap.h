@@ -6,13 +6,16 @@ typedef struct Bitmap * Bitmap;
 
 //return ith word contain in the bitmap b
 int getWord(Bitmap b, int i);
-//return the number of ones in the word contain by b 
-int getOnes(Bitmap b);
+//return the number of ones in the words <= i contain by b 
+byte getOnes(Bitmap b, int i);
 //return the length (in int) of the word in the bitmap b
 int getLength(Bitmap b);
 
-//give the string for a byte
-char* wordToBinary(int w, char* str);
+
+//give the string for ones
+char* onesToString(Bitmap b);
+//give the string for a word
+char* wordToBinaryString(int w, char* str);
 //display the Bitmap
 void displayBitmap(Bitmap b);
 
