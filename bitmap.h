@@ -4,9 +4,15 @@
 typedef unsigned char byte;
 typedef struct Bitmap * Bitmap;
 
+//return ith word contain in the bitmap b
+int getWord(Bitmap b, int i);
+//return the number of ones in the word contain by b 
+int getOnes(Bitmap b);
+//return the length (in int) of the word in the bitmap b
+int getLength(Bitmap b);
 
 //give the string for a byte
-char* byteToBinary(byte b, char* str);
+char* wordToBinary(int w, char* str);
 //display the Bitmap
 void displayBitmap(Bitmap b);
 

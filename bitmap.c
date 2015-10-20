@@ -4,18 +4,44 @@
 struct Bitmap{
 	int ones;
 	int length;
-	byte* octet;
+	int* word;
 };
 
-char* byteToBinary(byte b, char* str){
-	str[8] = '\0';
+int getWord(Bitmap b, int i){
+	assert(i < getLength(b));
+	return b->word[i];
+}
+
+int getOnes(Bitmap b){
+	return b->ones;
+}
+
+int getLength(Bitmap b){
+	return b->length;
+}
+
+static void setWord(Bitmap b, int word, int i){
+	b->word[i] = word;
+}
+
+static void setOnes(Bitmap b, int ones){
+	b->ones = ones;
+}
+
+static void setLength(Bitmap b, int length){
+	b->length = length;
+}
+
+
+char* wordToBinary(int w, char* str){
+	str[32] = '\0';
 	int i;
 	char * c = malloc(sizeof(char));
 	assert(c != NULL);
-	for(i = 7; i >= 0; --i){
-		sprintf(c, "%d", b%2);
+	for(i = 31; i >= 0; --i){
+		sprintf(c, "%d", w%2);
 		str[i] = c[0];
-		b = b / 2;
+		w = w >> 1;
 	}
 	free(c);
 	return str;
@@ -23,10 +49,10 @@ char* byteToBinary(byte b, char* str){
 
 void displayBitmap(Bitmap b){
 	int i;
-	char* str = malloc(sizeof(char) * 9);
+	char* str = malloc(sizeof(char) * 33);
 	assert(str != NULL);
-	for(i = b->length - 1; i >= 0; i--){
-		printf("%s ", byteToBinary(b->octet[i], str));
+	for(i = getLength(b) - 1; i >= 0; i--){
+		printf("%s ", wordToBinary(getWord(b, i), str));
 	}
 	printf("\n");
 	free(str);
@@ -35,70 +61,70 @@ void displayBitmap(Bitmap b){
 Bitmap newBitmap(){
 	Bitmap b = malloc(sizeof(struct Bitmap));
 	assert(b != NULL);
-	b->ones = 0;
-	b->length = 1; //en octet
-	b->octet = malloc(sizeof(byte));
-	assert(b->octet != NULL);
+	setOnes(b, 0);
+	setLength(b, 1); //en int
+	b->word = malloc(sizeof(int));
+	assert(b->word != NULL);
 	return b;
 }
 
 void setBit(Bitmap b, int pos, int val){
-	//Attention, un octet : 0 <= pos <= 7
+	//Attention, un word : 0 <= pos <= 31
 	assert(b != NULL);
 	assert(val == 1 || val == 0);
 
-	if(pos > b->length * 8){
-		if(pos % 8 > 0){
-			b->octet = realloc(b->octet, sizeof(byte) * ((pos/8) + 1));
-			b->length = pos/8 + 1;
+	if(pos > getLength(b) * 32){
+		if(pos % 32 > 0){
+			b->word = realloc(b->word, sizeof(int) * ((pos/32) + 1));
+			setLength(b, pos/32 + 1);
 		}
 		else{
-			b->octet = realloc(b->octet, sizeof(byte) * (pos/8));
-			b->length = pos/8;
+			b->word = realloc(b->word, sizeof(int) * (pos/32));
+			setLength(b, pos/32);
 		}
-		assert(b->octet != NULL);
+		assert(b->word != NULL);
 	}
 
-	int nb = 1 << (pos % 8);
-	int i = pos/8;
-	if((b->octet[i] >> (pos % 8)) % 2 == 1){ //bit que l'on souhaite changé égal à 1
+	int nb = 1 << (pos % 32);
+	int i = pos/32;
+	if((getWord(b, i) >> (pos % 32)) % 2 == 1){ //bit que l'on souhaite changé égal à 1
 		if(val == 0){
-			b->octet[i] = b->octet[i] - nb;
-			b->ones = b->ones - 1;
+			setWord(b, getWord(b, i) - nb, i);
+			setOnes(b, getOnes(b) - 1);
 		}
 	}
 	else{ //bit que l'on souhaite changé égal à 0
 		if(val == 1){
-			b->octet[i] = b->octet[i] + nb;
-			b->ones = b->ones + 1;
+			setWord(b, getWord(b, i) + nb, i);
+			setOnes(b, getOnes(b) + 1);
 		}
 	}
 }
 
 void freeBitmap(Bitmap b){
-	free(b->octet);
+	free(b->word);
 	free(b);
 }
 
 Bitmap copyBitmap(Bitmap b){
 	Bitmap b2 = newBitmap();
-	b2->ones = b->ones;
-	b2->length = b->length;
-	b2->octet = malloc(sizeof(byte));
-	assert(b2->octet != NULL);
+	setOnes(b2, getOnes(b));
+	setLength(b2, getLength(b));
+	b2->word = malloc(sizeof(int) * getLength(b2));
+	assert(b2->word != NULL);
 	int i;
-	for(i = 0; i < b->length; i++){
-		b2->octet[i] = b->octet[i];
+	for(i = 0; i < getLength(b); i++){
+		setWord(b2, getWord(b, i), i);
 	}
 	return b2;
 }
 
 
-int rank1(Bitmap b, int i){
-	assert(i < b->length*8);
-	if(b->ones == 0)
+/* int rank1(Bitmap b, int i){
+	assert(i < getLength(b)*32);
+	if(getOnes(b) == 0)
 		return 0;
-	if(b->ones == b->length*8)
+	if(getOnes(b) == getLength(b)*32)
 		return i + 1;
 
 	int ini = 1;
@@ -167,7 +193,7 @@ int select0(Bitmap b, int i){
 			end = pos;
 	}
 	return ini;
-}
+} */
 
 int main(int argc, char** argv){
 	Bitmap b = newBitmap();
@@ -181,7 +207,7 @@ int main(int argc, char** argv){
 	displayBitmap(b);
 	displayBitmap(c);
 
-	printf("rank1 de b : i = 16 : %d\n", rank1(b, 16));
+	//printf("rank1 de b : i = 16 : %d\n", rank1(b, 16));
 	//printf("rank0 de b : i = 12 : %d\n", rank0(b, 12));
 	//printf("select1 de c : i = 2 : %d\n", select1(c, 2));
 	//printf("select0 de c : i = 5 : %d\n", select0(c, 5));
