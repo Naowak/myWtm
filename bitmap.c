@@ -16,6 +16,10 @@ byte getOnes(Bitmap b, int i){
 	return b->ones[i];
 }
 
+int getOnesBitmap(Bitmap b){
+	return getOnes(b, getLength(b) -1);
+}
+
 int getLength(Bitmap b){
 	return b->length;
 }
@@ -137,6 +141,7 @@ void setBit(Bitmap b, int pos, int val){
 
 void freeBitmap(Bitmap b){
 	free(b->word);
+	free(b->ones);
 	free(b);
 }
 
@@ -158,105 +163,3 @@ Bitmap copyBitmap(Bitmap b){
 
 	return b2;
 }
-
-
-
-
-int main(int argc, char** argv){
-	Bitmap b = newBitmap();
-	setBit(b, 2, 1);
-	setBit(b, 12, 1);
-	setBit(b, 20, 1);
-	setBit(b, 65, 1);
-	setBit(b, 8, 1);
-	setBit(b, 8, 0);
-	setBit(b, 65, 0);
-
-	Bitmap c = copyBitmap(b);
-	setBit(c, 12, 0);
-
-	displayBitmap(b);
-	displayBitmap(c);
-
-	freeBitmap(b);
-	freeBitmap(c);
-
-	return 0;
-} 
-
-
-
-/* int rank1(Bitmap b, int i){
-	assert(i < getLength(b)*32);
-	if(getOnes(b) == 0)
-		return 0;
-	if(getOnes(b) == getLength(b)*32)
-		return i + 1;
-
-	int ini = 1;
-	int end = b->ones;
-	int pos;
-	int bp;
-
-	while(ini < end){
-		pos = (ini + end) / 2;
-		bp = select1(b, pos);
-		if(bp == i)
-			return pos;
-		if(bp < i)
-			ini = pos + 1;
-		else
-			end = pos - 1;
-	}
-	if(select1(b, ini) > i)
-		return ini - 1;
-	return ini;
-}
-
-int rank0(Bitmap b, int i){
-	return i + 1 - rank1(b, i);
-}
-
-int select1(Bitmap b, int i){
-	assert(i <= b->ones);
-	assert(i != 0);
-	if(b->ones == b->length * 8)
-		return i - 1;
-
-	int ini = 0;
-	int end = (b->length * 8) -1;
-	int pos;
-	int br;
-
-	while(ini < end){
-		pos = (ini + end)/2;
-		br = rank1(b, pos);
-		if(br < i)
-			ini = pos + 1;
-		else
-			end = pos;
-	}
-	return ini;
-}
-
-int select0(Bitmap b, int i){
-	assert(i <= (b->length * 8) - b->ones);
-	assert(i != 0);
-	if(b->ones == 0)
-		return i - 1;
-
-	int ini = 0;
-	int end = (b->length * 8) - 1;
-	int pos;
-	int br;
-
-	while(ini < end){
-		pos = (ini + end) / 2;
-		br = rank0(b, pos);
-		if(br < i)
-			ini = pos + 1;
-		else
-			end = pos;
-	}
-	return ini;
-} */
