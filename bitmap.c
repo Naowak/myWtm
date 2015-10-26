@@ -1,5 +1,4 @@
 #include "bitmap.h"
-#include <assert.h>
 
 struct Bitmap{
 	byte* ones;

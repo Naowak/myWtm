@@ -1,6 +1,7 @@
 #ifndef __BITMAP_OPERATORS_H__
 #define __BITMAP_OPERATORS_H__
 
+#include <assert.h>
 #include "bitmap.h"
 
 //return the number of bit in the i-th bit of the Bitmap b.

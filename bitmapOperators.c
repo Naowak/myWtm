@@ -1,5 +1,4 @@
 #include "bitmapOperators.h"
-#include <assert.h>
 
 int rankB(Bitmap b, int i, int bit){
 	//32 is the size of a int in bit

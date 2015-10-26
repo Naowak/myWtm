@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 
 typedef unsigned char byte;
 typedef struct Bitmap * Bitmap;
