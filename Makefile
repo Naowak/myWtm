@@ -25,6 +25,9 @@ bitmapOperators.o:
 dict.o: 
 	gcc -o dict.o -c dict.c $(CFLAGS)
 
+wtpt.o:
+	gcc -o wtpt.o -c wtpt.c $(CFLAGS)
+
 testBitmap.o: 
 	gcc -o testBitmap.o -c testBitmap.c $(CFLAGS)
 

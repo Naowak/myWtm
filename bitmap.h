@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <assert.h>
 
+// /!\ Cette bibliothèque n'est pas prévu pour un utilisateur
+
 typedef unsigned char byte;
 typedef struct Bitmap * Bitmap;
 

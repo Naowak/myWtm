@@ -8,7 +8,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#define TYPE char
+// /!\ Cette bibliothèque n'est pas prévu pour un utilisateur
+
+#define TYPE int 
 /* TEMPORAIREMENT ON MET CHAR */
 
 typedef struct Dict * Dict;
