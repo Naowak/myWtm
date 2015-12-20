@@ -135,18 +135,19 @@ static void putCharIntoWtpt(Wtpt w, TYPE c, int pos){
 
 		pos = rankB(getBitmapWtpt(w), pos+1, bit);
 
-		if(bit){
-			//bit == 1 donc droite
-			if(getRightSonWtpt(w) == NULL)
-				setRightSon(w, newWtpt());
-			w = getRightSonWtpt(w);
-		}
-		else{
-			//bit == 0 donc gauche
-			if(getLeftSonWtpt(w) == NULL)
-				setLeftSon(w, newWtpt());
-			w = getLeftSonWtpt(w);
-		}
+		if(i+1 < codeSize)
+			if(bit){
+				//bit == 1 donc droite
+				if(getRightSonWtpt(w) == NULL)
+					setRightSon(w, newWtpt());
+				w = getRightSonWtpt(w);
+			}
+			else{
+				//bit == 0 donc gauche
+				if(getLeftSonWtpt(w) == NULL)
+					setLeftSon(w, newWtpt());
+				w = getLeftSonWtpt(w);
+			}
 	}
 	setAllHighWtpt(tmp);
 }
