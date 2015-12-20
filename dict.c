@@ -53,24 +53,44 @@ static void agrandirDict(Dict d){
 }
 
 
-
-Dict newDict(char* filename){
-	assert(filename != NULL);
-
+Dict newDict(){
 	Dict d = malloc(sizeof(struct Dict));
 	assert(d != NULL);
 	initializeDict(d, 16);
+	setSizeDict(d, 0);
+	return d;
+}
+
+
+Dict newDictFromFile(char* filename){
+	Dict d = newDict();
 
 	int f = open(filename, O_RDONLY);
 
 	int n;
-	TYPE c;
+	TYPE s = 0;
+	char c;
 
 	do{
-		n = read(f, &c, sizeof(TYPE));
-		if(n == sizeof(TYPE))
-			addElemDict(d, c); //TODO : implements addElem !!
-	}while(n == sizeof(TYPE));
+		n = read(f, &c, sizeof(char));
+		if(n == sizeof(char))
+			if(c >= '0' && c <= '9'){
+				if(s*10 + c-'0' > MAX_TYPE){
+					printf("nombre fichier trop gros, %d\n", s);
+					assert(0);
+				}
+				s *= 10;
+				s += c - '0';			
+			}
+			else if(c == ' ' || c == '\n' || c == EOF){
+				addElemDict(d, s);
+				s = 0;
+			}
+			else{
+				printf("Erreur : char != ' ' ou chiffre.\n");
+				assert(0);
+			}
+	}while(n == sizeof(char));
 
 	close(f);
 
@@ -99,7 +119,7 @@ void freeDict(Dict d){
 
 
 
-int getCodeFromCharDict(Dict d, TYPE c){
+TYPE getCodeFromCharDict(Dict d, TYPE c){
 	int i;
 	for(i = 0; i < getSizeDict(d); i++){
 		if(getCharFromCodeDict(d, i) == c)
@@ -119,8 +139,7 @@ size_t getSizeDict(Dict d){
 int getCodeSizeDict(Dict d){
 	int i = 0;
 	size_t s = getSizeDict(d);
-	while(s){
-		s = s >> 1;
+	while(s >>= 1){
 		i++;
 	}
 	return i; //i = log2(sizeDict)
@@ -128,13 +147,17 @@ int getCodeSizeDict(Dict d){
 
 
 
-void addElemDict(Dict d, TYPE c){
-	if(getCodeFromCharDict(d, c) == -1){
+TYPE addElemDict(Dict d, TYPE c){
+	//O(n), n = taille dict
+	TYPE nb = getCodeFromCharDict(d, c);
+	if(nb == -1){
 		if(getSizeDict(d) == getSizeMaxDict(d)) // tax Max trop petite
 			agrandirDict(d);
 		setSizeDict(d, getSizeDict(d) + 1);
 		setElemTab(d, getSizeDict(d) - 1, c);
+		return getSizeDict(d) - 1;
 	}
+	return nb;
 }
 
 void removeElemDict(Dict d, TYPE c){
@@ -146,4 +169,11 @@ void removeElemDict(Dict d, TYPE c){
 		setElemTab(d, i-1, getCharFromCodeDict(d, i));
 	}
 	setSizeDict(d, getSizeDict(d) - 1);
+}
+
+void printDict(Dict d){
+	int i;
+	for(i = 0; i < getSizeDict(d); i++)
+		printf("%d:%d ", i, getCharFromCodeDict(d, i));
+	printf("\n");
 }

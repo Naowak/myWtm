@@ -20,14 +20,6 @@ int getOnesBitmap(Bitmap b);
 int getLength(Bitmap b);
 
 
-//give the string for ones
-char* onesToString(Bitmap b);
-//give the string for a word
-char* wordToBinaryString(int w, char* str);
-//display the Bitmap
-void displayBitmap(Bitmap b);
-
-
 //Create and return a new Bitmap initialized to 0.
 Bitmap newBitmap();
 //set the bit pos in Bitmap to the value val.
@@ -36,6 +28,10 @@ void setBit(Bitmap b, int pos, int val);
 void freeBitmap(Bitmap b);
 //Return a copy of a Bitmap
 Bitmap copyBitmap(Bitmap b);
+
+
+//print the bitmap
+void printBitmap(Bitmap b);
 
 #endif
 

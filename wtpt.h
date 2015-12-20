@@ -12,15 +12,15 @@ typedef struct Wtpt * Wtpt;
 
 //1
 //return the bitmap
-Bitmap getBitmap(Wtpt w);
+Bitmap getBitmapWtpt(Wtpt w);
 //return the leftSon
-Wtpt getLeftSon(Wtpt w);
+Wtpt getLeftSonWtpt(Wtpt w);
 //return the rightSon
-Wtpt getRightSon(Wtpt w);
+Wtpt getRightSonWtpt(Wtpt w);
 //return tree's high
-int getHigh(Wtpt w);
+int getHighWtpt(Wtpt w);
 //return the Dict
-Dict getDict(Wtpt w);
+Dict getDictWtpt(Wtpt w);
 
 //2
 //Create and initialize a wtpt
@@ -45,8 +45,11 @@ Wtpt readWtpt(char* fileName);
 
 //5
 //Compress the Input file in the Output one.
-void compress(char* fileNameInput, char* fileNameOutput);
+void compress_Wtpt(char* fileNameInput, char* fileNameOutput);
 //Decompress the Output file int the Input one.
-void decompress(char* fileNameInput, char* fileNameOutput);
+void decompress_Wtpt(char* fileNameInput, char* fileNameOutput);
+
+//print the Wtpt w
+void printWtpt(Wtpt w);
 
 #endif

@@ -42,7 +42,7 @@ int main(){
 
 	printf("\n");
 
-	displayBitmap(b);
+	printBitmap(b);
 
 	freeBitmap(b);
 }

@@ -7,18 +7,19 @@ int main(int argc, char** argv){
 	setBit(b, 2, 1);
 	setBit(b, 12, 1);
 	setBit(b, 20, 1);
+	setBit(b, 32, 1);
+	setBit(b, 33, 1);
 	setBit(b, 65, 1);
 	setBit(b, 8, 1);
 	setBit(b, 8, 0);
-	setBit(b, 65, 0);
 
 	Bitmap c = copyBitmap(b);
 	setBit(c, 12, 0);
 
-	printf("%d = 3\n", getOnesBitmap(b));
+	printf("%d = 5\n", getOnesBitmap(b));
 
-	displayBitmap(b);
-	displayBitmap(c);
+	printBitmap(b);
+	printBitmap(c);
 
 	freeBitmap(b);
 	freeBitmap(c);

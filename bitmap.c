@@ -1,5 +1,11 @@
 #include "bitmap.h"
 
+/* 
+	Structure Bitmap :
+		ones = nombre de 1
+		length = nombre de mot de 32 bits
+		word = tableau des mots
+*/
 struct Bitmap{
 	byte* ones;
 	int length;
@@ -36,8 +42,8 @@ static void initializeOnes(Bitmap b, int i){
 }
 
 static void setOnes(Bitmap b, byte ones, int i){
-	assert(ones <= 32);
-	byte tmp = ones - getOnes(b, i);
+	//assert(ones <= 32);
+	int tmp = ones - getOnes(b, i);
 	int k;
 	for(k = i; k < getLength(b); k++)
 		b->ones[k] = getOnes(b, k) + tmp;
@@ -45,36 +51,6 @@ static void setOnes(Bitmap b, byte ones, int i){
 
 static void setLength(Bitmap b, int length){
 	b->length = length;
-}
-
-
-char* wordToBinaryString(int w, char* str){
-	str[32] = '\0';
-	int i;
-	char * c = malloc(sizeof(char));
-	assert(c != NULL);
-	for(i = 31; i >= 0; --i){
-		sprintf(c, "%d", w%2);
-		str[i] = c[0];
-		w = w >> 1;
-	}
-	free(c);
-	return str;
-}
-
-void displayBitmap(Bitmap b){
-	int i;
-	char* str = malloc(sizeof(char) * 33);
-	assert(str != NULL);
-	printf("Length = %d, Ones : ", getLength(b));
-	for(i = getLength(b) - 1; i >= 0; i--)
-		printf("%u ", getOnes(b, i));
-	printf("\n");
-	for(i = getLength(b) - 1; i >= 0; i--){
-		printf("%s ", wordToBinaryString(getWord(b, i), str));
-	}
-	printf("\n");
-	free(str);
 }
 
 Bitmap newBitmap(){
@@ -95,31 +71,19 @@ void setBit(Bitmap b, int pos, int val){
 	assert(b != NULL);
 	assert(val == 1 || val == 0);
 
-	if(pos > getLength(b) * 32){
-		if(pos % 32 > 0){
-			b->word = realloc(b->word, sizeof(int) * ((pos/32) + 1));
-			b->ones = realloc(b->ones, sizeof(byte) * ((pos/32) + 1));
-			int nb = getLength(b);
-			setLength(b, pos/32 + 1);
-			for(; nb < (pos/32) + 1; nb++){
-				initializeWord(b, nb);
-				initializeOnes(b , nb);
-				setOnes(b, getOnes(b, nb - 1), nb);
-			}
-		}
-		else{
-			b->word = realloc(b->word, sizeof(int) * (pos/32));
-			b->ones = realloc(b->ones, sizeof(byte) * (pos/32));
-			int nb = getLength(b);
-			setLength(b, pos/32);
-			for(; nb < pos/32; nb++){
-				initializeWord(b, nb);
-				initializeOnes(b , nb);
-				setOnes(b, getOnes(b, nb - 1), nb);
-			}
-			setLength(b, pos/32);
-		}
+	if(pos >= getLength(b) * 32){
+		//mot plus grand que zone alloué -> réalocation de la mémoire
+		b->word = realloc(b->word, sizeof(int) * ((pos/32) + 1));
 		assert(b->word != NULL);
+		b->ones = realloc(b->ones, sizeof(byte) * ((pos/32) + 1));
+		assert(b->ones != NULL);
+		int nb = getLength(b);
+		setLength(b, pos/32 + 1);
+		for(; nb < (pos/32) + 1; nb++){
+			initializeWord(b, nb);
+			initializeOnes(b , nb);
+			setOnes(b, getOnes(b, nb - 1), nb);
+		}
 	}
 
 	int nb = 1 << (pos % 32);
@@ -162,3 +126,35 @@ Bitmap copyBitmap(Bitmap b){
 
 	return b2;
 }
+
+static char* wordToBinaryString(int w, char* str){
+	str[32] = '\0';
+	int i;
+	char * c = malloc(sizeof(char));
+	assert(c != NULL);
+	for(i = 31; i >= 0; --i){
+		sprintf(c, "%d", w%2);
+		str[i] = *c;
+		w = w >> 1;
+	}
+	free(c);
+	return str;
+}
+
+void printBitmap(Bitmap b){
+	int i;
+	char* str = malloc(sizeof(char) * 33);
+	assert(str != NULL);
+	/*printf("Length = %d, Ones : ", getLength(b));
+	for(i = getLength(b) - 1; i >= 0; i--)
+		printf("%u ", getOnes(b, i));
+	printf("\n");*/
+	for(i = getLength(b) - 1; i >= 0; i--){
+		printf("%s ", wordToBinaryString(getWord(b, i), str));
+	}
+	printf("\n");
+	free(str);
+}
+
+
+//TODO : Changement, tout en fonction !
