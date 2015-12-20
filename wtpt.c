@@ -119,7 +119,9 @@ void freeWtpt(Wtpt w){
 */
 static void putCharIntoWtpt(Wtpt w, TYPE c, int pos){
 	TYPE code = addElemDict(getDictWtpt(w), c);
+	printf("code : %d\n", code);
 	int codeSize = getCodeSizeDict(getDictWtpt(w));
+	printf("codeSize : %d\n", codeSize);
 
 	Wtpt tmp = w;
 
@@ -160,6 +162,8 @@ static void putCharIntoWtpt(Wtpt w, TYPE c, int pos){
 
 Wtpt WtptFromFile(char* fileName){
 	Wtpt w = newWtpt();
+	freeDict(getDictWtpt(w));
+	setDict(w, newDictFromFile(fileName));
 
 	int f = open(fileName, O_RDONLY);
 
@@ -180,7 +184,7 @@ Wtpt WtptFromFile(char* fileName){
 				s += c - '0';			
 			}
 			else if(c == ' ' || c == '\n' || c == EOF){
-				putCharIntoWtpt(w, s, pos); // WTF, pos = 33 mais il envois 28.
+				putCharIntoWtpt(w, s, pos);
 				s = 0;
 				pos++;
 			}

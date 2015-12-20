@@ -5,6 +5,7 @@ struct Dict{
 	TYPE* tab;
 	size_t size;
 	size_t sizeMax;
+	int codeSize;
 };
 
 
@@ -37,6 +38,15 @@ static void setSizeMaxDict(Dict d, int n){
 
 static size_t getSizeMaxDict(Dict d){
 	return d->sizeMax;
+}
+
+static void calculCodeSizeDict(Dict d){
+	int i = 1;
+	size_t s = getSizeDict(d) - 1;
+	while(s >>= 1){
+		i++;
+	}
+	d->codeSize = i; //i = log2(sizeDict)
 }
 
 static void initializeDict(Dict d, size_t n){
@@ -137,12 +147,7 @@ size_t getSizeDict(Dict d){
 }
 
 int getCodeSizeDict(Dict d){
-	int i = 0;
-	size_t s = getSizeDict(d);
-	while(s >>= 1){
-		i++;
-	}
-	return i; //i = log2(sizeDict)
+	return d->codeSize;
 }
 
 
@@ -155,6 +160,7 @@ TYPE addElemDict(Dict d, TYPE c){
 			agrandirDict(d);
 		setSizeDict(d, getSizeDict(d) + 1);
 		setElemTab(d, getSizeDict(d) - 1, c);
+		calculCodeSizeDict(d);
 		return getSizeDict(d) - 1;
 	}
 	return nb;
