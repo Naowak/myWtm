@@ -106,36 +106,32 @@ void freeWtpt(Wtpt w){
 	}
 }
 
-/*static getLengthInBitFromCode(TYPE code){
-	int i;
-	while(code )
-}*/
-
 /*
 	Mets le bit à la position pos du Bitmap de Wtpt au (pos+1)ème 
 	bit correspondant à son code.
-	Le fait de manière récursive sur ses fils droits et/ou gauches.
+	Le fait de manière itératif sur ses fils droits et/ou gauches.
 	Les initializes s'ils n'existent pas encore.
 */
 static void putCharIntoWtpt(Wtpt w, TYPE c, int pos){
 	TYPE code = addElemDict(getDictWtpt(w), c);
-	printf("code : %d\n", code);
 	int codeSize = getCodeSizeDict(getDictWtpt(w));
-	printf("codeSize : %d\n", codeSize);
 
 	Wtpt tmp = w;
 
 	int bit;
 	int i;
-	//peut etre faut il d'abord créer l'alphabet
-	//ou alors codeSize = log2(code).
+	
 	for(i = 0; i < codeSize; i++){
 		assert(w != NULL);
 
 		bit = (code >> i) & 1; //bit = 1 ou 0
 		setBit(getBitmapWtpt(w), pos, bit);
 
-		pos = rankB(getBitmapWtpt(w), pos+1, bit);
+		if(pos != 0)
+			/* pos devient le nombre de "bit" qu'il y avait avant lui
+			On fait attention, car on ne peut pas utiliser rankB pour 0
+			si pos est 0, finalement on reste à 0 :) */
+			pos = rankB(getBitmapWtpt(w), pos, bit);
 
 		if(i+1 < codeSize)
 			if(bit){
