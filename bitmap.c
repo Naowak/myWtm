@@ -8,6 +8,7 @@
 */
 struct Bitmap{
 	byte* ones;
+	int posFar; //nombre de mot stocké
 	int length;
 	int* word;
 };
@@ -27,6 +28,14 @@ int getOnesBitmap(Bitmap b){
 
 int getLength(Bitmap b){
 	return b->length;
+}
+
+int getPosFar(Bitmap b){
+	return b->posFar;
+}
+
+static setPosFar(Bitmap b, int pos){
+	b->posFar = pos;
 }
 
 static void initializeWord(Bitmap b, int i){
@@ -63,6 +72,7 @@ Bitmap newBitmap(){
 	b->word = malloc(sizeof(int));
 	assert(b->word != NULL);
 	initializeWord(b, 0);
+	setPosFar(b, -1);
 	return b;
 }
 
@@ -70,6 +80,10 @@ void setBit(Bitmap b, int pos, int val){
 	//Attention, un word : 0 <= pos <= 31
 	assert(b != NULL);
 	assert(val == 1 || val == 0);
+	assert(pos >= 0);
+
+	if(getPosFar(b) < pos)
+		setPosFar(b, pos);
 
 	if(pos >= getLength(b) * 32){
 		//mot plus grand que zone alloué -> réalocation de la mémoire
@@ -109,9 +123,10 @@ void freeBitmap(Bitmap b){
 }
 
 Bitmap copyBitmap(Bitmap b){
-	Bitmap b2 = newBitmap();
-	int i;
+	Bitmap b2 = malloc(sizeof(struct Bitmap));
+	assert(b2 != NULL);
 
+	int i;
 	setLength(b2, getLength(b));
 
 	b2->ones = malloc(sizeof(byte) * getLength(b2));

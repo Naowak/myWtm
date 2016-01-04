@@ -34,8 +34,6 @@ static void setRightSon(Wtpt w, Wtpt rightSon){
 	w->rightSon = rightSon;
 }
 
-
-
 int getHighWtpt(Wtpt w){
 	return w->high;
 }
@@ -93,7 +91,7 @@ Wtpt copyWtpt(Wtpt w){
 	setLeftSon(w2, copyWtpt(getLeftSonWtpt(w)));
 	setRightSon(w2, copyWtpt(getRightSonWtpt(w)));
 	setHigh(w2, getHighWtpt(w));
-	setDict(w2, copyDict(getDictWtpt(w)));
+	setDict(w2, getDictWtpt(w));
 	return w2;
 }
 
@@ -103,6 +101,7 @@ void freeWtpt(Wtpt w){
 		freeWtpt(getLeftSonWtpt(w));
 		freeWtpt(getRightSonWtpt(w));
 		freeDict(getDictWtpt(w));
+		free(w);
 	}
 }
 
@@ -150,11 +149,6 @@ static void putCharIntoWtpt(Wtpt w, TYPE c, int pos){
 	setAllHighWtpt(tmp);
 }
 
-/*static TYPE readCharFromWtpt(Wtpt w, int pos){
-	//TODO
-}*/
-
-
 
 Wtpt WtptFromFile(char* fileName){
 	Wtpt w = newWtpt();
@@ -195,11 +189,6 @@ Wtpt WtptFromFile(char* fileName){
 	return w;
 }
 
-/*void FileFromWtpt(char* fileName, Wtpt w){
-	int f = open(fileName, O_WRONLY | O_CREAT, 0666);
-	//TODO
-
-}*/
 
 void printWtpt(Wtpt w){
 	if(getLeftSonWtpt(w)){

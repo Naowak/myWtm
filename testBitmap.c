@@ -16,10 +16,12 @@ int main(int argc, char** argv){
 	Bitmap c = copyBitmap(b);
 	setBit(c, 12, 0);
 
-	printf("%d = 5\n", getOnesBitmap(b));
+	printf("%d = 6\n", getOnesBitmap(b));
 
 	printBitmap(b);
 	printBitmap(c);
+
+	printf(" posFar : %d\n", getPosFar(b));
 
 	freeBitmap(b);
 	freeBitmap(c);
