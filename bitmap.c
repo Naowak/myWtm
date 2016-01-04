@@ -34,7 +34,7 @@ int getPosFar(Bitmap b){
 	return b->posFar;
 }
 
-static setPosFar(Bitmap b, int pos){
+void setPosFar(Bitmap b, int pos){
 	b->posFar = pos;
 }
 
@@ -102,7 +102,7 @@ void setBit(Bitmap b, int pos, int val){
 
 	int nb = 1 << (pos % 32);
 	int i = pos/32;
-	if((getWord(b, i) >> (pos % 32)) % 2 == 1){ //bit que l'on souhaite changé égal à 1
+	if((getWord(b, i) >> (pos % 32)) & 1){ //bit que l'on souhaite changé égal à 1
 		if(val == 0){
 			setWord(b, getWord(b, i) - nb, i);
 			setOnes(b, getOnes(b, i) - 1, i);
@@ -114,6 +114,18 @@ void setBit(Bitmap b, int pos, int val){
 			setOnes(b, getOnes(b, i) + 1, i);
 		}
 	}
+}
+
+int getBit(Bitmap b, int pos){
+	assert(b != NULL);
+	assert(pos >= 0);
+	if(pos > getPosFar(b))
+		return -1;
+
+	int q = pos/32;
+	int r = pos%32;
+
+	return (getWord(b, q) >> r) & 1;
 }
 
 void freeBitmap(Bitmap b){

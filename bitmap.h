@@ -18,12 +18,16 @@ int getOnesBitmap(Bitmap b);
 int getLength(Bitmap b);
 /* return the position where is the fariest bit */
 int getPosFar(Bitmap b);
+/* set the posFar to the position pos */
+void setPosFar(Bitmap b, int pos);
 
 
 /* Create and return a new Bitmap initialized to 0. */
 Bitmap newBitmap();
 /* set the bit pos in Bitmap to the value val. */
 void setBit(Bitmap b, int pos, int val);
+/* get the value of the bit pos in Bitmap */
+int getBit(Bitmap b, int pos);
 /* free the memory taken by a Bitmap */
 void freeBitmap(Bitmap b);
 /* Return a copy of a Bitmap */

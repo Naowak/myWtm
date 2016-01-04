@@ -2,7 +2,7 @@ CFLAGS=-g
 
 
 
-all: testBitmap testBitmapOperators testDict testWtpt createNumberRandomFile
+all: testBitmap testBitmapOperators testDict testWtpt createNumberRandomFile testBitmapMutable
 
 
 
@@ -17,6 +17,9 @@ testDict: testDict.o dict.o
 
 testWtpt: testWtpt.o wtpt.o
 	gcc -o testWtpt testWtpt.o wtpt.o bitmap.o bitmapOperators.o dict.o
+
+testBitmapMutable: testBitmapMutable.o bitmapMutable.o bitmap.o
+	gcc -o testBitmapMutable testBitmapMutable.o bitmapMutable.o bitmap.o
 
 createNumberRandomFile: createNumberRandomFile.o
 	gcc -o createNumberRandomFile createNumberRandomFile.o
@@ -34,18 +37,13 @@ dict.o:
 wtpt.o:
 	gcc -o wtpt.o -c wtpt.c $(CFLAGS)
 
-testBitmap.o: 
-	gcc -o testBitmap.o -c testBitmap.c $(CFLAGS)
+bitmapMutable.o:
+	gcc -o bitmapMutable.o -c bitmapMutable.c $(CFLAGS)
 
-testBitmapOperators.o:
-	gcc -o testBitmapOperators.o -c testBitmapOperators.c $(CFLAGS)
-
-testDict.o:
-	gcc -o testDict.o -c testDict.c $(CFLAGS)
 
 
 
 
 clean:
-	rm -rf *.o testBitmap testBitmapOperators testDict testWtpt createNumberRandomFile
+	rm -rf *.o testBitmap testBitmapOperators testDict testWtpt createNumberRandomFile testBitmapMutable
 

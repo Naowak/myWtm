@@ -22,6 +22,10 @@ int main(int argc, char** argv){
 	printBitmap(c);
 
 	printf(" posFar : %d\n", getPosFar(b));
+	printf("65 : 1, res : %d\n", getBit(b, 65));
+	printf("32 : 1, res : %d\n", getBit(b, 32));
+	printf("8 : 0, res : %d\n", getBit(b, 8));
+	printf("70 : -1, res : %d\n", getBit(b, 70));
 
 	freeBitmap(b);
 	freeBitmap(c);
