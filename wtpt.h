@@ -21,6 +21,23 @@ Wtpt getRightSonWtpt(Wtpt w);
 int getHighWtpt(Wtpt w);
 /* return the Dict */
 Dict getDictWtpt(Wtpt w);
+/* return the number of elem in the Wtpt */
+TYPE getNumberOfElemWtpt(Wtpt w);
+
+
+/* set the High og the Wtpt w and his sons, and return the high of w */
+int setAllHighWtpt(Wtpt w);
+/* set The Bitmap from the Wtpt w, by the bitmap b */
+void setBitmapWtpt(Wtpt w, Bitmap b);
+/* set the left son of the wtpt w by the wtpt leftSon */
+void setLeftSonWtpt(Wtpt w, Wtpt leftSon);
+/* set the right son of the wtpt w by the wtpt rightSon */
+void setRightSonWtpt(Wtpt w, Wtpt rightSon);
+/* set the Dict in the Wtpt w by the dict d */
+void setDictWtpt(Wtpt w, Dict d);
+/* set the number of elem in the Wtpt */
+void setNumberOfElemWtpt(Wtpt w, TYPE nb);
+
 
 
 /* Create and initialize a wtpt */

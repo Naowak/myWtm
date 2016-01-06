@@ -6,35 +6,40 @@ struct Wtpt{
 	Wtpt rightSon;
 	int high;
 	Dict dict;
+	TYPE nbElem;
 };
 
 
 
 Bitmap getBitmapWtpt(Wtpt w){
+	assert(w != NULL);
 	return w->bitmap;
 }
 
-static void setBitmap(Wtpt w, Bitmap b){
+void setBitmapWtpt(Wtpt w, Bitmap b){
 	w->bitmap = b;
 }
 
 Wtpt getLeftSonWtpt(Wtpt w){
+	assert(w != NULL);
 	return w->leftSon;
 }
 
-static void setLeftSon(Wtpt w, Wtpt leftSon){
+void setLeftSonWtpt(Wtpt w, Wtpt leftSon){
 	w->leftSon = leftSon;
 }
 
 Wtpt getRightSonWtpt(Wtpt w){
+	assert(w != NULL);
 	return w->rightSon;
 }
 
-static void setRightSon(Wtpt w, Wtpt rightSon){
+void setRightSonWtpt(Wtpt w, Wtpt rightSon){
 	w->rightSon = rightSon;
 }
 
 int getHighWtpt(Wtpt w){
+	assert(w != NULL);
 	return w->high;
 }
 
@@ -52,7 +57,7 @@ static max(int x, int y){
 	Calcul la hauteur de manière récursive de tout l'arbre,
 	set chaque noeud à sa valeur
 */
-static int setAllHighWtpt(Wtpt w){
+int setAllHighWtpt(Wtpt w){
 	if(w == NULL)
 		return 0;
 	else{
@@ -64,22 +69,33 @@ static int setAllHighWtpt(Wtpt w){
 }
 
 Dict getDictWtpt(Wtpt w){
+	assert(w != NULL);
 	return w->dict;
 }
 
-static void setDict(Wtpt w, Dict d){
+void setDictWtpt(Wtpt w, Dict d){
 	w->dict = d;
+}
+
+TYPE getNumberOfElemWtpt(Wtpt w){
+	assert(w != NULL);
+	return w->nbElem;
+}
+
+void setNumberOfElemWtpt(Wtpt w, TYPE nb){
+	w->nbElem = nb;
 }
 
 
 
 Wtpt newWtpt(){
 	Wtpt w = malloc(sizeof(struct Wtpt));
-	setBitmap(w, newBitmap());
+	setBitmapWtpt(w, newBitmap());
 	setHigh(w, 1);
-	setDict(w, newDict());
-	setLeftSon(w, NULL);
-	setRightSon(w, NULL);
+	setDictWtpt(w, newDict());
+	setLeftSonWtpt(w, NULL);
+	setRightSonWtpt(w, NULL);
+	setNumberOfElemWtpt(w, 0);
 	return w;
 }
 
@@ -87,11 +103,11 @@ Wtpt copyWtpt(Wtpt w){
 	if(w == NULL)
 		return NULL;
 	Wtpt w2 = malloc(sizeof(struct Wtpt));
-	setBitmap(w2, copyBitmap(getBitmapWtpt(w)));
-	setLeftSon(w2, copyWtpt(getLeftSonWtpt(w)));
-	setRightSon(w2, copyWtpt(getRightSonWtpt(w)));
+	setBitmapWtpt(w2, copyBitmap(getBitmapWtpt(w)));
+	setLeftSonWtpt(w2, copyWtpt(getLeftSonWtpt(w)));
+	setRightSonWtpt(w2, copyWtpt(getRightSonWtpt(w)));
 	setHigh(w2, getHighWtpt(w));
-	setDict(w2, getDictWtpt(w));
+	setDictWtpt(w2, getDictWtpt(w));
 	return w2;
 }
 
@@ -110,6 +126,9 @@ void freeWtpt(Wtpt w){
 	bit correspondant à son code.
 	Le fait de manière itératif sur ses fils droits et/ou gauches.
 	Les initializes s'ils n'existent pas encore.
+
+	/!\ Attention, la collision n'est pas gérer. L'elem sera écrasé si
+	pos contient déjà une valeur. De plus un elem en plus sera compter
 */
 static void putCharIntoWtpt(Wtpt w, TYPE c, int pos){
 	TYPE code = addElemDict(getDictWtpt(w), c);
@@ -125,6 +144,7 @@ static void putCharIntoWtpt(Wtpt w, TYPE c, int pos){
 
 		bit = (code >> i) & 1; //bit = 1 ou 0
 		setBit(getBitmapWtpt(w), pos, bit);
+		setNumberOfElemWtpt(w, getNumberOfElemWtpt(w) + 1);
 
 		if(pos != 0)
 			/* pos devient le nombre de "bit" qu'il y avait avant lui
@@ -135,14 +155,16 @@ static void putCharIntoWtpt(Wtpt w, TYPE c, int pos){
 		if(i+1 < codeSize)
 			if(bit){
 				//bit == 1 donc droite
-				if(getRightSonWtpt(w) == NULL)
-					setRightSon(w, newWtpt());
+				if(getRightSonWtpt(w) == NULL){
+					setRightSonWtpt(w, newWtpt());
+				}
 				w = getRightSonWtpt(w);
 			}
 			else{
 				//bit == 0 donc gauche
-				if(getLeftSonWtpt(w) == NULL)
-					setLeftSon(w, newWtpt());
+				if(getLeftSonWtpt(w) == NULL){
+					setLeftSonWtpt(w, newWtpt());
+				}
 				w = getLeftSonWtpt(w);
 			}
 	}
@@ -153,7 +175,7 @@ static void putCharIntoWtpt(Wtpt w, TYPE c, int pos){
 Wtpt WtptFromFile(char* fileName){
 	Wtpt w = newWtpt();
 	freeDict(getDictWtpt(w));
-	setDict(w, newDictFromFile(fileName));
+	setDictWtpt(w, newDictFromFile(fileName));
 
 	int f = open(fileName, O_RDONLY);
 
@@ -198,5 +220,6 @@ void printWtpt(Wtpt w){
 		printWtpt(getRightSonWtpt(w));
 	}
 	printf("Hauteur : %d\n", getHighWtpt(w));
+	printf("Nb elem : %d\n", getNumberOfElemWtpt(w));
 	printBitmap(getBitmapWtpt(w));
 }

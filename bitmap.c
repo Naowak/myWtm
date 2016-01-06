@@ -182,6 +182,3 @@ void printBitmap(Bitmap b){
 	printf("\n");
 	free(str);
 }
-
-
-//TODO : Changement, tout en fonction !
