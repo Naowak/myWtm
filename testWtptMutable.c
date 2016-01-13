@@ -19,5 +19,12 @@ int main(int argc, char** argv){
 	printf("\n\n");
 	printWtpt(w);
 
+	modifyWtptMutable(w, 125, 0);
+	modifyWtptMutable(w, 256, 2);
+	modifyWtptMutable(w, 659, 1);
+
+	printf("\n\n");
+	printWtpt(w);
+
 	return 0;
 }

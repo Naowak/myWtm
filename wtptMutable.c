@@ -34,18 +34,20 @@ void insertWtptMutable(Wtpt w, TYPE c, int pos){
 			if(bit){
 				//bit == 1 donc droite
 				if(getRightSonWtpt(w) == NULL){
+					int nb = rankB(getBitmapWtpt(w), getNumberOfElemWtpt(w), bit);
 					setRightSonWtpt(w, newWtpt());
-					setPosFar(getBitmapWtpt(getRightSonWtpt(w)), pos-1);
-					setNumberOfElemWtpt(getRightSonWtpt(w), pos);
+					setPosFar(getBitmapWtpt(getRightSonWtpt(w)), nb-1);
+					setNumberOfElemWtpt(getRightSonWtpt(w), nb);
 				}
 				w = getRightSonWtpt(w);
 			}
 			else{
 				//bit == 0 donc gauche
 				if(getLeftSonWtpt(w) == NULL){
+					int nb = rankB(getBitmapWtpt(w), getNumberOfElemWtpt(w), bit);
 					setLeftSonWtpt(w, newWtpt());
-					setPosFar(getBitmapWtpt(getLeftSonWtpt(w)), pos-1);
-					setNumberOfElemWtpt(getLeftSonWtpt(w), pos);
+					setPosFar(getBitmapWtpt(getLeftSonWtpt(w)), nb-1);
+					setNumberOfElemWtpt(getLeftSonWtpt(w), nb);
 				}
 				w = getLeftSonWtpt(w);
 			}
@@ -93,4 +95,10 @@ void removeWtptMutable(Wtpt w, int pos){
 			break;
 	}
 	setAllHighWtpt(tmp);
+}
+
+
+void modifyWtptMutable(Wtpt w, TYPE c, int pos){
+	removeWtptMutable(w, pos);
+	insertWtptMutable(w, c, pos);
 }

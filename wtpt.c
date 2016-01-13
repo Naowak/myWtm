@@ -221,5 +221,6 @@ void printWtpt(Wtpt w){
 	}
 	printf("Hauteur : %d\n", getHighWtpt(w));
 	printf("Nb elem : %d\n", getNumberOfElemWtpt(w));
+	printf("pointeur : %p\n", w);
 	printBitmap(getBitmapWtpt(w));
 }
