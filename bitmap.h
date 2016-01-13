@@ -37,5 +37,28 @@ Bitmap copyBitmap(Bitmap b);
 /* print the bitmap */
 void printBitmap(Bitmap b);
 
+
+/*----BITMAP_OPERATORS-----*/
+
+/* return the number of bit in the i-th bit of the Bitmap b. */
+int rankB(Bitmap b, int i, int bit);
+/* return the location of the i-th bit in the Bitmap b. */
+int selectB(Bitmap b, int i, int bit);
+/* return the i-th bit */
+int accessB(Bitmap b, int i);
+
+
+/*----BITMAP_MUTABLE-----*/
+
+/* Insert in the Bitmap b, the bit bit, to the position pos */
+Bitmap insertBitmapMutable(Bitmap b, int bit, int pos);
+
+/* Remove from the Bitmap b, the bit to the position pos */
+Bitmap removeBitmapMutable(Bitmap b, int pos);
+
+/* Modify the bit in the Bitmap b, at the position pos,
+by the bit bit */
+Bitmap modifyBitmapMutable(Bitmap b, int bit, int pos);
+
 #endif
 

@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <assert.h>
 #include "bitmap.h"
-#include "bitmapOperators.h"
 #include "dict.h"
 
 typedef struct Wtpt * Wtpt;
@@ -68,5 +67,18 @@ void decompress_Wtpt(char* fileNameInput, char* fileNameOutput); //TODO
 
 /* print the Wtpt w */
 void printWtpt(Wtpt w);
+
+
+/*------WTPT_MUTABLE------*/
+
+/* Insert in the Wtpt w, the caractere c, to the position pos. */
+void insertWtptMutable(Wtpt w, TYPE c, int pos);
+
+/* Remove from the Wtpt w, the caractere which is at the
+position pos */
+void removeWtptMutable(Wtpt w, int pos);
+
+/* Modify the caractere at the position pos, by the caractere c */
+void modifyWtptMutable(Wtpt w, TYPE c, int pos);
 
 #endif
