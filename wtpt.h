@@ -50,20 +50,8 @@ void freeWtpt(Wtpt w);
 /* Create a Wtpt based on the file and return it.
 The file must have only numbers inside */
 Wtpt WtptFromFile(char* fileName);
-/* Create a file based on a Wtpt */
-void FileFromWtpt(char* fileName, Wtpt w);
-
-
-/* Write the Wtpt in a file */
-void writeWtpt(char* fileName, Wtpt w); //TODO
-/* Read and Create a Wtpt from a file and return it */
-Wtpt readWtpt(char* fileName); //TODO
-
-
-/* Compress the Input file in the Output one. */
-void compress_Wtpt(char* fileNameInput, char* fileNameOutput); //TODO
-/* Decompress the Output file int the Input one. */
-void decompress_Wtpt(char* fileNameInput, char* fileNameOutput); //TODO
+/* Extract the data compress in the wtpt, print the result */
+void printExtractWtpt(Wtpt w);
 
 /* print the Wtpt w */
 void printWtpt(Wtpt w);

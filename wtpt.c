@@ -211,6 +211,48 @@ Wtpt WtptFromFile(char* fileName){
 	return w;
 }
 
+void printExtractWtpt(Wtpt w){
+	int n = 0;
+	int sizeDict = getCodeSizeDict(getDictWtpt(w));
+	int nbElem = getNumberOfElemWtpt(w);
+	int i;
+	int pos;
+	int cmp;
+	int bit;
+	int nbFromDict;
+	Wtpt tmp = w;
+
+	for(cmp = 0; cmp < nbElem; cmp++){
+		pos = cmp;
+		for(i = 0; i < sizeDict; i++){
+
+			bit = getBit(getBitmapWtpt(w), pos);
+			n += bit << i;
+
+			if(pos != 0)
+				pos = rankB(getBitmapWtpt(w), pos, bit);
+
+			if(bit){
+				if(getRightSonWtpt(w) != NULL)
+					w = getRightSonWtpt(w);
+				else
+					break;
+			}
+			else{
+				if(getLeftSonWtpt(w) != NULL)
+					w = getLeftSonWtpt(w);
+				else
+					break;
+			}
+
+		}
+		w = tmp;
+		nbFromDict = getCharFromCodeDict(getDictWtpt(w), n);
+		printf("%d\n", nbFromDict);
+		n = 0;
+	}
+}
+
 
 void printWtpt(Wtpt w){
 	if(getLeftSonWtpt(w)){

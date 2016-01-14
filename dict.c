@@ -179,6 +179,7 @@ void removeElemDict(Dict d, TYPE c){
 
 void printDict(Dict d){
 	int i;
+	printf("CodeSize : %d\n", getCodeSizeDict(d));
 	for(i = 0; i < getSizeDict(d); i++)
 		printf("%d:%d ", i, getCharFromCodeDict(d, i));
 	printf("\n");
