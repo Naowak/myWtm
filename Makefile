@@ -29,6 +29,9 @@ dict.o:
 wtpt.o:
 	gcc -o wtpt.o -c wtpt.c $(CFLAGS)
 
+wtArray.o:
+	gcc -o wtArray.o -c wtArray.c $(CFLAGS)
+
 
 
 

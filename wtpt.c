@@ -16,7 +16,8 @@ Bitmap getBitmapWtpt(Wtpt w){
 	return w->bitmap;
 }
 
-void setBitmapWtpt(Wtpt w, Bitmap b){
+/* set The Bitmap from the Wtpt w, by the bitmap b */
+static void setBitmapWtpt(Wtpt w, Bitmap b){
 	w->bitmap = b;
 }
 
@@ -25,7 +26,8 @@ Wtpt getLeftSonWtpt(Wtpt w){
 	return w->leftSon;
 }
 
-void setLeftSonWtpt(Wtpt w, Wtpt leftSon){
+/* set the left son of the wtpt w by the wtpt leftSon */
+static void setLeftSonWtpt(Wtpt w, Wtpt leftSon){
 	w->leftSon = leftSon;
 }
 
@@ -34,7 +36,8 @@ Wtpt getRightSonWtpt(Wtpt w){
 	return w->rightSon;
 }
 
-void setRightSonWtpt(Wtpt w, Wtpt rightSon){
+/* set the right son of the wtpt w by the wtpt rightSon */
+static void setRightSonWtpt(Wtpt w, Wtpt rightSon){
 	w->rightSon = rightSon;
 }
 
@@ -57,7 +60,7 @@ static max(int x, int y){
 	Calcul la hauteur de manière récursive de tout l'arbre,
 	set chaque noeud à sa valeur
 */
-int setAllHighWtpt(Wtpt w){
+static int setAllHighWtpt(Wtpt w){
 	if(w == NULL)
 		return 0;
 	else{
@@ -73,7 +76,8 @@ Dict getDictWtpt(Wtpt w){
 	return w->dict;
 }
 
-void setDictWtpt(Wtpt w, Dict d){
+/* set the Dict in the Wtpt w by the dict d */
+static void setDictWtpt(Wtpt w, Dict d){
 	w->dict = d;
 }
 
@@ -82,7 +86,8 @@ TYPE getNumberOfElemWtpt(Wtpt w){
 	return w->nbElem;
 }
 
-void setNumberOfElemWtpt(Wtpt w, TYPE nb){
+/* set the number of elem in the Wtpt */
+static void setNumberOfElemWtpt(Wtpt w, TYPE nb){
 	w->nbElem = nb;
 }
 
