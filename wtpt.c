@@ -104,6 +104,7 @@ Wtpt newWtpt(){
 	return w;
 }
 
+//The dict rest the same one, be carefull
 Wtpt copyWtpt(Wtpt w){
 	if(w == NULL)
 		return NULL;
@@ -113,6 +114,7 @@ Wtpt copyWtpt(Wtpt w){
 	setRightSonWtpt(w2, copyWtpt(getRightSonWtpt(w)));
 	setHigh(w2, getHighWtpt(w));
 	setDictWtpt(w2, getDictWtpt(w));
+	setNumberOfElemWtpt(w2, getNumberOfElemWtpt(w));
 	return w2;
 }
 

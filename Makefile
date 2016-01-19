@@ -2,7 +2,7 @@ CFLAGS=-g
 
 
 
-all: testBitmap testDict testWtpt createNumberRandom
+all: testBitmap testDict testWtpt createNumberRandom wtArray.o
 
 
 
