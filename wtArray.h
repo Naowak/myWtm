@@ -4,7 +4,7 @@
 #include "bitmap.h"
 #include "dict.h"
 
-typedef struct WtArray * WtArray;
+typedef struct wtArray * WtArray;
 
 /* return the bitmap */
 Bitmap getBitmapWtArray(WtArray w);
@@ -25,7 +25,7 @@ TYPE getNumberOfElemWtArray(WtArray w);
 /* Create and initialize a WtArray */
 WtArray newWtArray();
 /* Copy the WtArray and return the copy */
-WtArray copyArray(WtArray w);
+WtArray copyWtArray(WtArray w);
 /* Free the momery taken by a WtArray */
 void freeWtArray(WtArray w);
 

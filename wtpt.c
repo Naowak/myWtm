@@ -137,7 +137,7 @@ void freeWtpt(Wtpt w){
 	/!\ Attention, la collision n'est pas gérer. L'elem sera écrasé si
 	pos contient déjà une valeur. De plus un elem en plus sera compter
 */
-static void putCharIntoWtpt(Wtpt w, TYPE c, int pos){
+static void putElemIntoWtpt(Wtpt w, TYPE c, int pos){
 	TYPE code = addElemDict(getDictWtpt(w), c);
 	int codeSize = getCodeSizeDict(getDictWtpt(w));
 
@@ -203,7 +203,7 @@ Wtpt WtptFromFile(char* fileName){
 				s += c - '0';			
 			}
 			else if(c == ' ' || c == '\n' || c == EOF){
-				putCharIntoWtpt(w, s, pos);
+				putElemIntoWtpt(w, s, pos);
 				s = 0;
 				pos++;
 			}

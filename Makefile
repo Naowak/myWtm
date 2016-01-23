@@ -2,7 +2,7 @@ CFLAGS=-g
 
 
 
-all: testBitmap testDict testWtpt createNumberRandom wtArray.o
+all: testBitmap testDict testWtpt createNumberRandom testWtArray
 
 
 
@@ -14,6 +14,9 @@ testDict: testDict.o dict.o
 
 testWtpt: testWtpt.o wtpt.o
 	gcc -o testWtpt testWtpt.o wtpt.o bitmap.o dict.o
+
+testWtArray: testWtArray.o wtArray.o
+	gcc -o testWtArray testWtArray.o wtArray.o bitmap.o dict.o
 
 createNumberRandom: createNumberRandom.o
 	gcc -o createNumberRandom createNumberRandom.o
@@ -37,5 +40,5 @@ wtArray.o:
 
 
 clean:
-	rm -rf *.o testBitmap testDict testWtpt createNumberRandom
+	rm -rf *.o testBitmap testDict testWtpt testWtArray createNumberRandom
 
