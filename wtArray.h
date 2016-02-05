@@ -3,6 +3,10 @@
 
 #include "bitmap.h"
 #include "dict.h"
+#include "math.h"
+#include <sys/types.h>
+#include <unistd.h>
+
 
 typedef struct wtArray * WtArray;
 

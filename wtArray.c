@@ -151,6 +151,7 @@ WtArray copyWtArray(WtArray w){
 	return w2;
 }
 
+//retourne une copie exacte du WtArray, sans refaire de bitmap ou dict.
 static WtArray backUpWtArray(WtArray w){
 	WtArray w2 = malloc(sizeof(struct wtArray));
 	setBitmapWtArray(w2, getBitmapWtArray(w));
@@ -175,28 +176,150 @@ void freeWtArray(WtArray w){
 
 
 
-static void putElemIntoWtArray(WtArray w, TYPE c, int pos){
-
-	/*
-
-	ATTENTION, POS DOIT IL ETRE DE LA BONNE TAILLE ?
-
-	*/
-	//assert(pos < getNb)
-	TYPE code = addElemDict(getDictWtArray(w), c);
+static void putElemIntoWtArray(WtArray w, TYPE c, int pos, int* tab){
+	//pos correspond ici à chaque fois à la position dans le mini bitmap
+	TYPE code = getCodeFromCharDict(getDictWtArray(w), c);
+	assert(code != -1);
 	int codeSize = getCodeSizeDict(getDictWtArray(w));
-
-	WtArray tmp = backUpWtArray(w);
 
 	int bit;
 	int i;
+	int j = 0;
+	int debutMiniBitmap;
 
-	for(i = 0; i < codeSize, i++){
-		assert(w != NULL);
-
+	for(i = 0; i < codeSize; i++){
 		bit = (code >> i) & 1;
-		setBit(getBitmapWtArray(w), pos, bit)
+		debutMiniBitmap = ((j-1) >= 0 ? tab[j-1] : 0);
+		setBit(getBitmapWtArray(w), pos + debutMiniBitmap, bit);
+
+		if(pos > 0){
+			pos = rankB(getBitmapWtArray(w), pos, bit);
+			if(debutMiniBitmap > 0) 
+				pos -= rankB(getBitmapWtArray(w), debutMiniBitmap, bit);
+		}
+
+		if(bit)
+			j = j*2+2;
+		else
+			j = j*2+1;
 	}
+}
+
+WtArray WtArrayFromFile(char* fileName){
+	WtArray w = newWtArray();
+
+	int f = open(fileName, O_RDONLY);
+
+	/* Première lecture du fichier pour initialiser le dict */
+	int n;
+	TYPE s = 0;
+	char c;
+	do{
+		n = read(f, &c, sizeof(char));
+		if(n == sizeof(char))
+			if(c >= '0' && c <= '9'){
+				if(s*10 + c-'0' > MAX_TYPE){
+					printf("nombre fichier trop gros, %d\n", s);
+					assert(0);
+				}
+				s *= 10;
+				s += c - '0';			
+			}
+			else if(c == ' ' || c == '\n' || c == EOF){
+				//Ici, un elem est reconnu
+				addElemDict(getDictWtArray(w), s);
+				s = 0;
+			}
+			else{
+				printf("Erreur : char != ' ' ou chiffre.\n");
+				assert(0);
+			}
+	}while(n == sizeof(char));
+
+	/* Deuxième lecture : permet de compter dans le tableau le nombre d'occurence de chaque elem */
+	lseek(f, 0, SEEK_SET);
+	int taille_tab = pow(2, getCodeSizeDict(getDictWtArray(w))) - 1;
+	int tab[taille_tab];
+	int i;
+	int bit;
+	int j;
+	for(i = 0; i < taille_tab; i++)
+		tab[i] = 0;
+
+	s = 0;
+	do{
+		n = read(f, &c, sizeof(char));
+		if(n == sizeof(char))
+			if(c >= '0' && c <= '9'){
+				if(s*10 > MAX_TYPE - c + '0'){
+					printf("nombre dans fichier trop gros, %d\n", s);
+					assert(0);
+				}
+				s *= 10;
+				s += c - '0';			
+			}
+			else if(c == ' ' || c == '\n' || c == EOF){
+				//Ici, un elem est reconnu, on augmente les cases du tableau auxquels ses bit correspondent
+				TYPE code = getCodeFromCharDict(getDictWtArray(w), s);
+				assert(code != -1);
+				j = 0;
+				for(i = 0; i < getCodeSizeDict(getDictWtArray(w)); i++){
+					bit = (code >> i) & 1;
+					int k;
+					for(k = j; k < taille_tab; k++)
+						//On souhaite que toutes les cases du tableau ait en valeur leur dernière position
+						tab[k]++;
+					if(bit)
+						j = 2*j+2;
+					else
+						j = 2*j+1;
+				}
+				s = 0;
+			}
+			else{
+				printf("Erreur : char != ' ' ou chiffre.\n");
+				assert(0);
+			}
+	}while(n == sizeof(char));
+
+
+	/* Troisième lecture pour placé les éléments dans wtpt. */
+	lseek(f, 0, SEEK_SET);
+	s = 0;
+	int pos = 0;
+	int nbElem = 0;
+
+	do{
+		n = read(f, &c, sizeof(char));
+		if(n == sizeof(char))
+			if(c >= '0' && c <= '9'){
+				if(s*10 > MAX_TYPE - c + '0'){
+					printf("nombre dans fichier trop gros, %d\n", s);
+					assert(0);
+				}
+				s *= 10;
+				s += c - '0';			
+			}
+			else if(c == ' ' || c == '\n' || c == EOF){
+				//Ici, un elem est reconnu
+				putElemIntoWtArray(w, s, pos, tab);
+				s = 0;
+				pos++;
+				nbElem++;
+			}
+			else{
+				printf("Erreur : char != ' ' ou chiffre.\n");
+				assert(0);
+			}
+	}while(n == sizeof(char));
+
+	setHigh(w, getCodeSizeDict(getDictWtArray(w)));
+	setNumberOfElemWtArray(w, nbElem);
+
+	close(f);
+
+	return w;
+
 }
 
 
@@ -204,12 +327,14 @@ void printWtArray(WtArray w){
 	int i;
 	int j;
 	int cmp = 0;
-	for(i = 1; i++; i <= getHighWtArray(w)){
+	for(i = 1; i <= getHighWtArray(w); i++){
 		printf("%d : ", getHighWtArray(w));
-		for(j = 0; j++; j < getNumberOfElemWtArray(w), cmp++){
+		for(j = 0; j < getNumberOfElemWtArray(w); cmp++, j++){
 			printf("%d", getBit(getBitmapWtArray(w), cmp));
 		}
+		printf("\n");
 	}
 }
+//A revoir, sens d'affichage
 
 

@@ -16,7 +16,7 @@ testWtpt: testWtpt.o wtpt.o
 	gcc -o testWtpt testWtpt.o wtpt.o bitmap.o dict.o
 
 testWtArray: testWtArray.o wtArray.o
-	gcc -o testWtArray testWtArray.o wtArray.o bitmap.o dict.o
+	gcc -o testWtArray testWtArray.o wtArray.o bitmap.o dict.o -lm
 
 createNumberRandom: createNumberRandom.o
 	gcc -o createNumberRandom createNumberRandom.o

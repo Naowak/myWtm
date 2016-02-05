@@ -119,8 +119,10 @@ void setBit(Bitmap b, int pos, int val){
 int getBit(Bitmap b, int pos){
 	assert(b != NULL);
 	assert(pos >= 0);
-	if(pos > getPosFar(b))
-		return -1;
+	if(pos > getLength(b)*32){
+		printf("position trop loin\n");
+		assert(0);
+	}
 
 	int q = pos/32;
 	int r = pos%32;
