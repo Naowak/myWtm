@@ -12,12 +12,6 @@ typedef struct wtArray * WtArray;
 
 /* return the bitmap */
 Bitmap getBitmapWtArray(WtArray w);
-/* return a copy of the wtArray, but modify the position inside 
-to correspond to the left son*/
-WtArray getLeftSonWtArray(WtArray w); //HOW DOES IT WORK
-/* return a copy of the wtArray, but modify the position inside 
-to correspond to the left son */
-WtArray getRightSonWtArray(WtArray w); //HOW DOES IT WORK
 /* return tree's high */
 int getHighWtArray(WtArray w);
 /* return the Dict */

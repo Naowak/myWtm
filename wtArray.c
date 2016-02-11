@@ -5,38 +5,7 @@ struct wtArray{
 	Dict dict;
 	TYPE nbElem;
 	int high;
-
-	int highMiniBitmap;
-	int posDebutMiniBitmap;
-	int nbElemMiniBitmap;
 };
-
-static int getHighMiniBitmap(WtArray w){
-	return w->highMiniBitmap;
-}
-static void setHighMiniBitmap(WtArray w, int highMiniBitmap){
-	w->highMiniBitmap = highMiniBitmap;
-}
-static int getNbElemMiniBitmap(WtArray w){
-	return w->nbElemMiniBitmap;
-}
-static void setNbElemMiniBitmap(WtArray w, int nb){
-	w->nbElemMiniBitmap = nb;
-}
-static int getPosDebutMiniBitmap(WtArray w){
-	return w->posDebutMiniBitmap;
-}
-static void setPosDebutMiniBitmap(WtArray w, int pos){
-	w->posDebutMiniBitmap = pos;
-}
-static WtArray initAllAttributMiniBitmap(WtArray w){
-	setHighMiniBitmap(w, 1);
-	setPosDebutMiniBitmap(w, 0);
-	setNbElemMiniBitmap(w, getNumberOfElemWtArray(w));
-	return w;
-}
-
-
 
 static void setHigh(WtArray w, int high){
 	w->high = high;
@@ -56,55 +25,39 @@ static void setNumberOfElemWtArray(WtArray w, TYPE nb){
 
 
 
+/* Donne la position dans le bitmap du début du fils Gauche, retourne -1 en cas d'erreur */
+static int getLeftSonWtArray(WtArray w, int posDebutCurrent){
+	assert(posDebutCurrent >= 0 && posDebutCurrent < getNumberOfElemWtArray(w)*getHighWtArray(w));
+	if(getNumberOfElemWtArray(w) == 0 || 
+			posDebutCurrent + getNumberOfElemWtArray(w) >= getHighBitmap(w)*getNumberOfElemWtArray(w))
+		return -1;
+
+	int highCurrent = posDebutCurrent/getNumberOfElemWtArray(w) + 1;
+
+	return highCurrent * getNumberOfElemWtArray(w) +
+		posDebutCurrent % getNumberOfElemWtArray(w); 
+}
+
+/* Donne la position dans le bitmap du début du fils Droit, retourne -1 en cas d'erreur */
+static int getRightSonWtArray(WtArray w, int posDebutCurrent, int nbElemCurrent){
+	assert(posDebutCurrent >= 0 && posDebutCurrent < getNumberOfElemWtArray(w)*getHighWtArray(w));
+	if(getNumberOfElemWtArray(w) == 0 || 
+			posDebutCurrent + getNumberOfElemWtArray(w) >= getHighBitmap(w)*getNumberOfElemWtArray(w))
+		return -1;
+
+	int highCurrent = posDebutCurrent/getNumberOfElemWtArray(w) + 1;
+
+	return highCurrent * getNumberOfElemWtArray(w) +
+		posDebutCurrent % getNumberOfElemWtArray(w) + 
+		rankB(getBitmapWtArray(w), posDebutCurrent + nbElemCurrent, 0) 
+		- posDebutCurrent != 0 ? 
+			rankB(getBitmapWtArray(w), posDebutCurrent, 0)
+			: 0;
+}
 
 
 Bitmap getBitmapWtArray(WtArray w){
 	return w->bitmap;
-}
-
-WtArray getLeftSonWtArray(WtArray w){
-	if(getNumberOfElemWtArray(w) == 0 || getHighMiniBitmap(w) + 1 >= getHighWtArray(w))
-		return NULL;
-
-	//Fixe le nombre d'élément du fils gauche
-	setNbElemMiniBitmap(w, 
-		rankB(getBitmapWtArray(w), getPosDebutMiniBitmap(w) + getNbElemMiniBitmap(w), 0) 
-		- getPosDebutMiniBitmap(w) != 0 ? 
-			rankB(getBitmapWtArray(w), getPosDebutMiniBitmap(w), 0)
-			: 0);
-
-	//Fixe la position du début du fils gauche
-	setPosDebutMiniBitmap(w, getHighMiniBitmap(w) * getNumberOfElemWtArray(w) +
-		getPosDebutMiniBitmap(w) % getNumberOfElemWtArray(w));
-
-	//Fixe la hauteur du mini Bitmap
-	setHighMiniBitmap(w, getHighMiniBitmap(w) + 1);
-
-	return w;
-}
-
-WtArray getRightSonWtArray(WtArray w){
-	if(getNumberOfElemWtArray(w) == 0 || getHighMiniBitmap(w) + 1 >= getHighWtArray(w))
-		return NULL;
-
-	//Fixe le nombre d'élément du fils droit
-	setNbElemMiniBitmap(w, 
-		rankB(getBitmapWtArray(w), getPosDebutMiniBitmap(w) + getNbElemMiniBitmap(w), 1) 
-		- getPosDebutMiniBitmap(w) != 0 ? 
-			rankB(getBitmapWtArray(w), getPosDebutMiniBitmap(w), 1)
-			: 0);
-
-	//Fixe la position du début du fils droit
-	setPosDebutMiniBitmap(w, getHighMiniBitmap(w) * getNumberOfElemWtArray(w) +
-		getPosDebutMiniBitmap(w) % getNumberOfElemWtArray(w) + 
-		rankB(getBitmapWtArray(w), getPosDebutMiniBitmap(w) + getNbElemMiniBitmap(w), 0) 
-		- getPosDebutMiniBitmap(w) != 0 ? 
-			rankB(getBitmapWtArray(w), getPosDebutMiniBitmap(w), 0)
-			: 0);
-
-	//Fixe la hauteur du mini Bitmap
-	setHighMiniBitmap(w, getHighMiniBitmap(w) + 1);
-
 }
 
 int getHighWtArray(WtArray w){
@@ -130,9 +83,6 @@ WtArray newWtArray(){
 	setDictWtArray(w, newDict());
 	setHigh(w, 1);
 	setNumberOfElemWtArray(w, 0);
-	setPosDebutMiniBitmap(w, 0);
-	setHighMiniBitmap(w, 1);
-	setNbElemMiniBitmap(w, 0);
 	return w;
 }
 
@@ -145,9 +95,6 @@ WtArray copyWtArray(WtArray w){
 	setDictWtArray(w2, copyDict(getDictWtArray(w))); // /!\ Pas pareil sur Wtpt
 	setHigh(w2, getHighWtArray(w));
 	setNumberOfElemWtArray(w2, getNumberOfElemWtArray(w));
-	setPosDebutMiniBitmap(w2, getPosDebutMiniBitmap(w));
-	setHighMiniBitmap(w2, getHighMiniBitmap(w));
-	setNbElemMiniBitmap(w2, getNbElemMiniBitmap(w));
 	return w2;
 }
 
@@ -158,9 +105,6 @@ static WtArray backUpWtArray(WtArray w){
 	setDictWtArray(w2, getDictWtArray(w));
 	setHigh(w2, getHighWtArray(w));
 	setNumberOfElemWtArray(w2, getNumberOfElemWtArray(w));
-	setPosDebutMiniBitmap(w2, getPosDebutMiniBitmap(w));
-	setHighMiniBitmap(w2, getHighMiniBitmap(w));
-	setNbElemMiniBitmap(w2, getNbElemMiniBitmap(w));
 	return w2;
 }
 
@@ -322,13 +266,17 @@ WtArray WtArrayFromFile(char* fileName){
 
 }
 
+void printExtractWtArray(WtArray w){
+	
+}
+
 
 void printWtArray(WtArray w){
 	int i;
 	int j;
 	int cmp = 0;
 	for(i = 1; i <= getHighWtArray(w); i++){
-		printf("%d : ", getHighWtArray(w));
+		printf("%d : ", i);
 		for(j = 0; j < getNumberOfElemWtArray(w); cmp++, j++){
 			printf("%d", getBit(getBitmapWtArray(w), cmp));
 		}
