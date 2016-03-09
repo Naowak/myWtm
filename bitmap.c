@@ -185,7 +185,6 @@ void printBitmap(Bitmap b){
 	free(str);
 }
 
-
 int rankB(Bitmap b, int i, int bit){
 	//32 is the size of a int in bit
 	assert(i > 0);
@@ -196,7 +195,14 @@ int rankB(Bitmap b, int i, int bit){
 	i = i % 32; //position du i dans word
 	if(pos != 0)
 		nb = getOnes(b, pos-1);
-	nb = nb + __builtin_popcount(( (1<<(i+1)) - 1) & getWord(b, pos)); //masque i+1
+	int tmp = 0;
+	int cmp = i;
+	do{ // Boucle = lent, mais il y avait un bug si je faisais (1 << 32) -1
+		tmp += 1 << cmp;
+		cmp--;
+	}while(cmp >= 0);
+	nb = nb + __builtin_popcount(tmp & getWord(b, pos)); //masque i+1
+	// /!\ ici nb reste à zéro si on fait un masque de 32 bit à 1.
 	if(bit)
 		return nb;
 	return i+1 + (32*pos) - nb;

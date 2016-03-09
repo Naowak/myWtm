@@ -40,7 +40,13 @@ int main(int argc, char** argv){
 	setBit(b, 65, 1);
 	setBit(b, 8, 1);
 
+	printBitmap(b);
+
 	printf("test rankB :\n");
+	printf("%d = 4\n", rankB(b, 32, 1));
+	printf("%d = 28\n", rankB(b, 32, 0));
+	printf("%d = 4\n", rankB(b, 64, 1));
+	printf("%d = 60\n", rankB(b, 64, 0));
 	printf("%d = 2 \n", rankB(b, 9, 1));
 	printf("%d = 4\n", rankB(b, 23, 1));
 	printf("%d = 19\n", rankB(b, 23, 0));

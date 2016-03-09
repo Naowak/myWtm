@@ -23,16 +23,16 @@ createNumberRandom: createNumberRandom.o
 
 
 
-bitmap.o:  
+bitmap.o: bitmap.c bitmap.h 
 	gcc -o bitmap.o -c bitmap.c $(CFLAGS)
 
-dict.o: 
+dict.o: dict.c dict.h
 	gcc -o dict.o -c dict.c $(CFLAGS)
 
-wtpt.o:
+wtpt.o: wtpt.c wtpt.h dict.h dict.c bitmap.h bitmap.c
 	gcc -o wtpt.o -c wtpt.c $(CFLAGS)
 
-wtArray.o:
+wtArray.o: wtArray.c wtArray.h dict.h dict.c bitmap.h bitmap.c
 	gcc -o wtArray.o -c wtArray.c $(CFLAGS)
 
 

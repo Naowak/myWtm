@@ -29,7 +29,7 @@ static void setNumberOfElemWtArray(WtArray w, TYPE nb){
 static int getLeftSonWtArray(WtArray w, int posDebutCurrent){
 	assert(posDebutCurrent >= 0 && posDebutCurrent < getNumberOfElemWtArray(w)*getHighWtArray(w));
 	if(getNumberOfElemWtArray(w) == 0 || 
-			posDebutCurrent + getNumberOfElemWtArray(w) >= getHighBitmap(w)*getNumberOfElemWtArray(w))
+			posDebutCurrent + getNumberOfElemWtArray(w) >= getHighWtArray(w)*getNumberOfElemWtArray(w))
 		return -1;
 
 	int highCurrent = posDebutCurrent/getNumberOfElemWtArray(w) + 1;
@@ -42,7 +42,7 @@ static int getLeftSonWtArray(WtArray w, int posDebutCurrent){
 static int getRightSonWtArray(WtArray w, int posDebutCurrent, int nbElemCurrent){
 	assert(posDebutCurrent >= 0 && posDebutCurrent < getNumberOfElemWtArray(w)*getHighWtArray(w));
 	if(getNumberOfElemWtArray(w) == 0 || 
-			posDebutCurrent + getNumberOfElemWtArray(w) >= getHighBitmap(w)*getNumberOfElemWtArray(w))
+			posDebutCurrent + getNumberOfElemWtArray(w) >= getHighWtArray(w)*getNumberOfElemWtArray(w))
 		return -1;
 
 	int highCurrent = posDebutCurrent/getNumberOfElemWtArray(w) + 1;
@@ -50,9 +50,9 @@ static int getRightSonWtArray(WtArray w, int posDebutCurrent, int nbElemCurrent)
 	return highCurrent * getNumberOfElemWtArray(w) +
 		posDebutCurrent % getNumberOfElemWtArray(w) + 
 		rankB(getBitmapWtArray(w), posDebutCurrent + nbElemCurrent, 0) 
-		- posDebutCurrent != 0 ? 
+		- (posDebutCurrent != 0 ? 
 			rankB(getBitmapWtArray(w), posDebutCurrent, 0)
-			: 0;
+			: 0);
 }
 
 
@@ -133,13 +133,15 @@ static void putElemIntoWtArray(WtArray w, TYPE c, int pos, int* tab){
 
 	for(i = 0; i < codeSize; i++){
 		bit = (code >> i) & 1;
-		debutMiniBitmap = ((j-1) >= 0 ? tab[j-1] : 0);
+		debutMiniBitmap = ((j-1) >= 0 ? tab[j-1] : 0); //position du début mini Bitmap OK
+
 		setBit(getBitmapWtArray(w), pos + debutMiniBitmap, bit);
 
-		if(pos > 0){
-			pos = rankB(getBitmapWtArray(w), pos, bit);
-			if(debutMiniBitmap > 0) 
+		if(pos > 0 && i+1 < codeSize){
+			pos = rankB(getBitmapWtArray(w), pos + debutMiniBitmap, bit);
+			if(debutMiniBitmap > 0){
 				pos -= rankB(getBitmapWtArray(w), debutMiniBitmap, bit);
+			}
 		}
 
 		if(bit)
@@ -208,11 +210,12 @@ WtArray WtArrayFromFile(char* fileName){
 				assert(code != -1);
 				j = 0;
 				for(i = 0; i < getCodeSizeDict(getDictWtArray(w)); i++){
-					bit = (code >> i) & 1;
 					int k;
 					for(k = j; k < taille_tab; k++)
 						//On souhaite que toutes les cases du tableau ait en valeur leur dernière position
 						tab[k]++;
+
+					bit = (code >> i) & 1;
 					if(bit)
 						j = 2*j+2;
 					else
@@ -267,7 +270,53 @@ WtArray WtArrayFromFile(char* fileName){
 }
 
 void printExtractWtArray(WtArray w){
-	
+	assert(getNumberOfElemWtArray(w) != 0);
+	int cmp;
+	int cmp_bis;
+	int nombre;
+	int bit;
+	int pos;
+	int posDebutCurrent = 0;
+	int nbElemCurrent = getNumberOfElemWtArray(w);
+
+	for(cmp = 0; cmp < getNumberOfElemWtArray(w); cmp++){
+		posDebutCurrent = 0;
+		nbElemCurrent = getNumberOfElemWtArray(w);
+		nombre = 0;
+		pos = cmp;
+
+		for(cmp_bis = 0; cmp_bis < getHighWtArray(w); cmp_bis++){
+			bit = getBit(getBitmapWtArray(w), pos);
+			nombre += bit << cmp_bis;
+
+			if(bit){
+				//bit == 1, fils droit
+				int rightSon = getRightSonWtArray(w, posDebutCurrent, nbElemCurrent);
+
+				pos = rightSon + (pos != 0 ? rankB(getBitmapWtArray(w), pos, 1) : 0) - 
+					(posDebutCurrent != 0 ? rankB(getBitmapWtArray(w), posDebutCurrent, 1) : 0);
+
+				nbElemCurrent = rankB(getBitmapWtArray(w), posDebutCurrent + nbElemCurrent, 1) -
+					(posDebutCurrent != 0 ? rankB(getBitmapWtArray(w), posDebutCurrent, 1) : 0);
+
+				posDebutCurrent = rightSon;
+			}
+			else{
+				//bit == 0, fils gauche
+				int leftSon = getLeftSonWtArray(w, posDebutCurrent);
+
+				pos = leftSon + (pos != 0 ? rankB(getBitmapWtArray(w), pos, 0) : 0) -
+					(posDebutCurrent != 0 ? rankB(getBitmapWtArray(w), posDebutCurrent, 0) : 0);
+
+				nbElemCurrent = rankB(getBitmapWtArray(w), posDebutCurrent + nbElemCurrent, 0) -
+					(posDebutCurrent != 0 ? rankB(getBitmapWtArray(w), posDebutCurrent, 0) : 0);
+
+				posDebutCurrent = leftSon;
+			}
+		}
+
+		printf("%d\n", getCharFromCodeDict(getDictWtArray(w), nombre));
+	}
 }
 
 
