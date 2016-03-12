@@ -30,6 +30,7 @@ int main(int argc, char** argv){
 
 	insertWtptMutable(w, 12, 0);
 	insertWtptMutable(w, 96, 4);
+	insertWtptMutable(w, 101, 65);
 	//insertWtptMutable(w, 104, 25);
 	//insertWtptMutable(w, 205, 35);
 

@@ -76,6 +76,7 @@ Bitmap newBitmap(){
 	return b;
 }
 
+/* /!\ Ici, ce n'est pas optimal, il faudrait ré-alloué la mémoire en utilisant un *2, au lieu d'un +1 */
 void setBit(Bitmap b, int pos, int val){
 	//Attention, un word : 0 <= pos <= 31
 	assert(b != NULL);
@@ -201,8 +202,7 @@ int rankB(Bitmap b, int i, int bit){
 		tmp += 1 << cmp;
 		cmp--;
 	}while(cmp >= 0);
-	nb = nb + __builtin_popcount(tmp & getWord(b, pos)); //masque i+1
-	// /!\ ici nb reste à zéro si on fait un masque de 32 bit à 1.
+	nb = nb + __builtin_popcount(tmp & getWord(b, pos)); 
 	if(bit)
 		return nb;
 	return i+1 + (32*pos) - nb;

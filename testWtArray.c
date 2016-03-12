@@ -7,6 +7,14 @@ int main(int argc, char** argv){
 
 	printExtractWtArray(w);
 
+	insertWtArrayMutable(w, 65, 33);
+	insertWtArrayMutable(w, 42, 0);
+	insertWtArrayMutable(w, 101, 32);
+
+	printWtArray(w);
+
+	printExtractWtArray(w);
+
 	freeWtArray(w);
 
 }

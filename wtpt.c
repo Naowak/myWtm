@@ -277,7 +277,8 @@ void printWtpt(Wtpt w){
 
 void insertWtptMutable(Wtpt w, TYPE c, int pos){
 	assert(w != NULL);
-	assert(pos <= getNumberOfElemWtpt(w)); //On peut ajouter en premier, en dernier ou entre
+	if(pos > getNumberOfElemWtpt(w)) //On peut ajouter en premier, en dernier ou entre
+		pos = getNumberOfElemWtpt(w);
 
 	TYPE code = addElemDict(getDictWtpt(w), c);
 	int codeSize = getCodeSizeDict(getDictWtpt(w));
