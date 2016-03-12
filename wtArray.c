@@ -321,8 +321,9 @@ void printExtractWtArray(WtArray w){
 			}
 		}
 
-		printf("%d\n", getCharFromCodeDict(getDictWtArray(w), nombre));
+		printf("%d  ", getCharFromCodeDict(getDictWtArray(w), nombre));
 	}
+	printf("\n");
 }
 
 
@@ -447,6 +448,7 @@ void insertWtArrayMutable(WtArray w, TYPE c, int pos){
 }
 
 
+/* /!\ On ne supprime pas des étages, même si on en a plus besoin */
 void removeWtArrayMutable(WtArray w, int pos){
 	assert(w != NULL);
 	assert(pos >= 0 && pos < getNumberOfElemWtArray(w));
@@ -500,4 +502,10 @@ void removeWtArrayMutable(WtArray w, int pos){
 	freeBitmap(getBitmapWtArray(w));
 	setBitmapWtArray(w, new);
 	setNumberOfElemWtArray(w, getNumberOfElemWtArray(w) - 1);
+}
+
+
+void modifyWtArrayMutable(WtArray w, TYPE c, int pos){
+	removeWtArrayMutable(w, pos);
+	insertWtArrayMutable(w, c, pos);
 }
