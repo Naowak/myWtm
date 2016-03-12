@@ -334,7 +334,7 @@ void insertWtptMutable(Wtpt w, TYPE c, int pos){
 */
 void removeWtptMutable(Wtpt w, int pos){
 	assert(w != NULL);
-	assert(pos < getNumberOfElemWtpt(w));
+	assert(pos >= 0 && pos < getNumberOfElemWtpt(w));
 	assert(getNumberOfElemWtpt(w) > 0);
 
 	int codeSize = getCodeSizeDict(getDictWtpt(w));

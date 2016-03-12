@@ -15,6 +15,14 @@ int main(int argc, char** argv){
 
 	printExtractWtArray(w);
 
+	removeWtArrayMutable(w, 0);
+	removeWtArrayMutable(w, 33);
+	removeWtArrayMutable(w, 31);
+
+	printWtArray(w);
+
+	printExtractWtArray(w);
+
 	freeWtArray(w);
 
 }

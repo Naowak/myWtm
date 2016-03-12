@@ -445,3 +445,59 @@ void insertWtArrayMutable(WtArray w, TYPE c, int pos){
 	if(getHighWtArray(w) != codeSize)
 		setHigh(w, codeSize);
 }
+
+
+void removeWtArrayMutable(WtArray w, int pos){
+	assert(w != NULL);
+	assert(pos >= 0 && pos < getNumberOfElemWtArray(w));
+
+	int codeSize = getHighWtArray(w);
+	int tab[codeSize];
+	int bit;
+	int nbElemCurrent = getNumberOfElemWtArray(w);
+	int posDebutCurrent = 0;
+	int cpt;
+
+	for(cpt = 0; cpt < codeSize; cpt++){
+		tab[cpt] = pos;
+		bit = getBit(getBitmapWtArray(w), pos);
+		if(bit){
+			//bit == 1, fils droit
+			int rightSon = getRightSonWtArray(w, posDebutCurrent, nbElemCurrent);
+
+			pos = rightSon + (pos != 0 ? rankB(getBitmapWtArray(w), pos, 1) : 0) - 
+				(posDebutCurrent != 0 ? rankB(getBitmapWtArray(w), posDebutCurrent, 1) : 0);
+
+			nbElemCurrent = rankB(getBitmapWtArray(w), posDebutCurrent + nbElemCurrent, 1) -
+				(posDebutCurrent != 0 ? rankB(getBitmapWtArray(w), posDebutCurrent, 1) : 0);
+
+			posDebutCurrent = rightSon;
+		}
+		else{
+			//bit == 0, fils gauche
+			int leftSon = getLeftSonWtArray(w, posDebutCurrent);
+
+			pos = leftSon + (pos != 0 ? rankB(getBitmapWtArray(w), pos, 0) : 0) -
+				(posDebutCurrent != 0 ? rankB(getBitmapWtArray(w), posDebutCurrent, 0) : 0);
+
+			nbElemCurrent = rankB(getBitmapWtArray(w), posDebutCurrent + nbElemCurrent, 0) -
+				(posDebutCurrent != 0 ? rankB(getBitmapWtArray(w), posDebutCurrent, 0) : 0);
+
+			posDebutCurrent = leftSon;
+		}
+	}
+
+	Bitmap new = newBitmap();
+	cpt = 0;
+	int i;
+	for(i = 0; i < getNumberOfElemWtArray(w)*getHighWtArray(w); i++){
+		if(i == tab[cpt])
+			cpt++;
+		else
+			setBit(new, i-cpt, getBit(getBitmapWtArray(w), i));
+	}
+
+	freeBitmap(getBitmapWtArray(w));
+	setBitmapWtArray(w, new);
+	setNumberOfElemWtArray(w, getNumberOfElemWtArray(w) - 1);
+}
