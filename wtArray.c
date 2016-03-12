@@ -27,8 +27,8 @@ static void setNumberOfElemWtArray(WtArray w, TYPE nb){
 
 /* Donne la position dans le bitmap du début du fils Gauche, retourne -1 en cas d'erreur */
 static int getLeftSonWtArray(WtArray w, int posDebutCurrent){
-	assert(posDebutCurrent >= 0 && posDebutCurrent < getNumberOfElemWtArray(w)*getHighWtArray(w));
-	if(getNumberOfElemWtArray(w) == 0)
+	if(posDebutCurrent < 0 || posDebutCurrent >= getNumberOfElemWtArray(w)*getHighWtArray(w) 
+		||getNumberOfElemWtArray(w) == 0)
 		return -1;
 
 	int highCurrent = posDebutCurrent/getNumberOfElemWtArray(w) + 1;
@@ -39,8 +39,8 @@ static int getLeftSonWtArray(WtArray w, int posDebutCurrent){
 
 /* Donne la position dans le bitmap du début du fils Droit, retourne -1 en cas d'erreur */
 static int getRightSonWtArray(WtArray w, int posDebutCurrent, int nbElemCurrent){
-	assert(posDebutCurrent >= 0 && posDebutCurrent < getNumberOfElemWtArray(w)*getHighWtArray(w));
-	if(getNumberOfElemWtArray(w) == 0)
+	if(posDebutCurrent < 0 || posDebutCurrent >= getNumberOfElemWtArray(w)*getHighWtArray(w) 
+		||getNumberOfElemWtArray(w) == 0)
 		return -1;
 
 	int highCurrent = posDebutCurrent/getNumberOfElemWtArray(w) + 1;
@@ -407,8 +407,7 @@ void insertWtArrayMutable(WtArray w, TYPE c, int pos){
 		if(pos_current == pos){
 			bit = (code >> cpt) & 1;
 			setBit(new, pos_current + cpt, bit);
-			cpt++;
-			if(cpt < codeSize-1){
+			if(cpt < codeSize){
 				if(bit){
 					//bit == 1, fils droit
 					int rightSon = getRightSonWtArray(w, posDebutCurrent, nbElemCurrent);
@@ -434,6 +433,7 @@ void insertWtArrayMutable(WtArray w, TYPE c, int pos){
 					posDebutCurrent = leftSon;
 				}
 			}
+			cpt++;
 		}
 		else{
 			setBit(new, pos_current+cpt, 0);

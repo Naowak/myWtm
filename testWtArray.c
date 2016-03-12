@@ -9,9 +9,9 @@ int main(int argc, char** argv){
 	printWtArray(w);
 	printExtractWtArray(w);
 
-	insertWtArrayMutable(w, 65, 33);
 	insertWtArrayMutable(w, 42, 0);
 	insertWtArrayMutable(w, 101, 32);
+	insertWtArrayMutable(w, 65, 33);
 
 	printf("\nInsertion de 42 en 0, 101 en 32, 65 en 33 (Donc à la fin).\n");
 
@@ -21,7 +21,7 @@ int main(int argc, char** argv){
 	printf("\nRemove des éléments rajoutés. -> On doit donc obtenir le même résultat qu'au début.\n");
 
 	removeWtArrayMutable(w, 0);
-	removeWtArrayMutable(w, 33);
+	removeWtArrayMutable(w, 32);
 	removeWtArrayMutable(w, 31);
 
 	printWtArray(w);
@@ -29,9 +29,9 @@ int main(int argc, char** argv){
 
 	printf("\nModify de pos 0 en 3000, pos 16 en 4000 et pos 32 en 5000.\n");
 
-	insertWtArrayMutable(w, 3000, 0);
-	insertWtArrayMutable(w, 4000, 16);
-	insertWtArrayMutable(w, 5000, 32);
+	modifyWtArrayMutable(w, 3000, 0);
+	modifyWtArrayMutable(w, 4000, 16);
+	modifyWtArrayMutable(w, 5000, 31);
 
 	printWtArray(w);
 	printExtractWtArray(w);
