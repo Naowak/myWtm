@@ -2,7 +2,7 @@
 
 
 struct Dict{
-	TYPE* tab;
+	int* tab;
 	size_t size;
 	size_t sizeMax;
 	int codeSize;
@@ -10,20 +10,20 @@ struct Dict{
 
 
 
-static TYPE* getTabDict(Dict d){
+static int* getTabDict(Dict d){
 	return d->tab;
 }
 
-static void setTabDict(Dict d, TYPE* t){
+static void setTabDict(Dict d, int* t){
 	d->tab = t;
 }
 
-static void setElemTab(Dict d, int i, TYPE c){
+static void setElemTab(Dict d, int i, int c){
 	assert(i < getSizeDict(d));
 	d->tab[i] = c;
 }
 
-static TYPE getElemTab(Dict d, int i){
+static int getElemTab(Dict d, int i){
 	assert(i < getSizeDict(d));
 	return d->tab[i];
 }
@@ -50,7 +50,7 @@ static void calculCodeSizeDict(Dict d){
 }
 
 static void initializeDict(Dict d, size_t n){
-	setTabDict(d, malloc(sizeof(TYPE)*n));
+	setTabDict(d, malloc(sizeof(int)*n));
 	assert(getTabDict(d) != NULL);
 	setSizeDict(d, 0);
 	setSizeMaxDict(d, n);
@@ -58,7 +58,7 @@ static void initializeDict(Dict d, size_t n){
 
 static void agrandirDict(Dict d){
 	setSizeMaxDict(d, getSizeMaxDict(d)*2);
-	setTabDict(d, realloc(getTabDict(d), sizeof(TYPE)*getSizeMaxDict(d)));
+	setTabDict(d, realloc(getTabDict(d), sizeof(int)*getSizeMaxDict(d)));
 	assert(getTabDict(d) != NULL);
 }
 
@@ -78,14 +78,14 @@ Dict newDictFromFile(char* filename){
 	int f = open(filename, O_RDONLY);
 
 	int n;
-	TYPE s = 0;
+	int s = 0;
 	char c;
 
 	do{
 		n = read(f, &c, sizeof(char));
 		if(n == sizeof(char))
 			if(c >= '0' && c <= '9'){
-				if(s*10 + c-'0' > MAX_TYPE){
+				if(s*10 + c-'0' > MAX_int){
 					printf("nombre fichier trop gros, %d\n", s);
 					assert(0);
 				}
@@ -129,7 +129,7 @@ void freeDict(Dict d){
 
 
 
-TYPE getCodeFromCharDict(Dict d, TYPE c){
+int getCodeFromCharDict(Dict d, int c){
 	int i;
 	for(i = 0; i < getSizeDict(d); i++){
 		if(getCharFromCodeDict(d, i) == c)
@@ -138,7 +138,7 @@ TYPE getCodeFromCharDict(Dict d, TYPE c){
 	return -1;
 }
 
-TYPE getCharFromCodeDict(Dict d, int code){
+int getCharFromCodeDict(Dict d, int code){
 	return getElemTab(d, code);
 }
 
@@ -152,9 +152,9 @@ int getCodeSizeDict(Dict d){
 
 
 
-TYPE addElemDict(Dict d, TYPE c){
+int addElemDict(Dict d, int c){
 	//O(n), n = taille dict
-	TYPE nb = getCodeFromCharDict(d, c);
+	int nb = getCodeFromCharDict(d, c);
 	if(nb == -1){
 		if(getSizeDict(d) == getSizeMaxDict(d)) // tax Max trop petite
 			agrandirDict(d);
@@ -166,7 +166,7 @@ TYPE addElemDict(Dict d, TYPE c){
 	return nb;
 }
 
-void removeElemDict(Dict d, TYPE c){
+void removeElemDict(Dict d, int c){
 	int i = 0;
 	while(i < getSizeDict(d) && getCharFromCodeDict(d, i) != c){
 		i++;

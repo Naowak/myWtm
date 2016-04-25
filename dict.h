@@ -9,9 +9,7 @@
 #include <fcntl.h>
 
 
-#define TYPE int 
-#define MAX_TYPE 2147483647
-/* type pour les printf : %d */
+#define MAX_int 2147483647
 
 typedef struct Dict * Dict;
 
@@ -26,9 +24,9 @@ void freeDict(Dict d);
 
 /* return the number given to a character
 return -1 if c isn't in the dict */
-TYPE getCodeFromCharDict(Dict d, TYPE c);
+int getCodeFromCharDict(Dict d, int c);
 /* return the Character for a number (O(1)) */
-TYPE getCharFromCodeDict(Dict d, int code);
+int getCharFromCodeDict(Dict d, int code);
 /* return the size of the Dict (number of different character) */
 size_t getSizeDict(Dict d);
 /* return codes' size */
@@ -36,10 +34,10 @@ int getCodeSizeDict(Dict d);
 
 /* test if c is in the dict. If it's not, place it in it.
 return the code given to the elem c */
-TYPE addElemDict(Dict d, TYPE c);
+int addElemDict(Dict d, int c);
 /* remove elem from the dict */
 /* Coute cher O(n) */
-void removeElemDict(Dict d, TYPE c);
+void removeElemDict(Dict d, int c);
 
 /* print the dict d */
 void printDict(Dict d);

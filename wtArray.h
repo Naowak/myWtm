@@ -17,7 +17,7 @@ int getHighWtArray(WtArray w);
 /* return the Dict */
 Dict getDictWtArray(WtArray w);
 /* return the number of elem in the WtArray */
-TYPE getNumberOfElemWtArray(WtArray w);
+int getNumberOfElemWtArray(WtArray w);
 
 
 /* Create and initialize a WtArray */
@@ -32,7 +32,6 @@ The file must have only numbers inside */
 WtArray WtArrayFromFile(char* fileName);
 /* Extract the data compress in the WtArray, print the result */
 void printExtractWtArray(WtArray w);
-
 /* print the WtArray w */
 void printWtArray(WtArray w);
 
@@ -40,14 +39,12 @@ void printWtArray(WtArray w);
 /*------WtArray_MUTABLE------*/
 
 /* Insert in the WtArray w, the caractere c, to the position pos. */
-void insertWtArrayMutable(WtArray w, TYPE c, int pos);
-
+void insertWtArrayMutable(WtArray w, int c, int pos);
 /* Remove from the WtArray w, the caractere which is at the
 position pos */
 void removeWtArrayMutable(WtArray w, int pos);
-
 /* Modify the caractere at the position pos, by the caractere c */
-void modifyWtArrayMutable(WtArray w, TYPE c, int pos);
+void modifyWtArrayMutable(WtArray w, int c, int pos);
 
 
 

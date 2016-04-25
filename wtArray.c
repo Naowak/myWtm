@@ -3,7 +3,7 @@
 struct wtArray{
 	Bitmap bitmap;
 	Dict dict;
-	TYPE nbElem;
+	int nbElem;
 	int high;
 };
 
@@ -19,7 +19,7 @@ static void setDictWtArray(WtArray w, Dict d){
 	w->dict = d;
 }
 /* set the number of elem in the WtArray */
-static void setNumberOfElemWtArray(WtArray w, TYPE nb){
+static void setNumberOfElemWtArray(WtArray w, int nb){
 	w->nbElem = nb;
 }
 
@@ -69,7 +69,7 @@ Dict getDictWtArray(WtArray w){
 	return w->dict;
 }
 
-TYPE getNumberOfElemWtArray(WtArray w){
+int getNumberOfElemWtArray(WtArray w){
 	assert(w != NULL);
 	return w->nbElem;
 }
@@ -124,9 +124,9 @@ void freeWtArray(WtArray w){
 
 
 
-static void putElemIntoWtArray(WtArray w, TYPE c, int pos, int* tab){
+static void putElemIntoWtArray(WtArray w, int c, int pos, int* tab){
 	//pos correspond ici à chaque fois à la position dans le mini bitmap
-	TYPE code = getCodeFromCharDict(getDictWtArray(w), c);
+	int code = getCodeFromCharDict(getDictWtArray(w), c);
 	assert(code != -1);
 	int codeSize = getCodeSizeDict(getDictWtArray(w));
 
@@ -163,13 +163,13 @@ WtArray WtArrayFromFile(char* fileName){
 
 	/* Première lecture du fichier pour initialiser le dict */
 	int n;
-	TYPE s = 0;
+	int s = 0;
 	char c;
 	do{
 		n = read(f, &c, sizeof(char));
 		if(n == sizeof(char))
 			if(c >= '0' && c <= '9'){
-				if(s*10 + c-'0' > MAX_TYPE){
+				if(s*10 + c-'0' > MAX_int){
 					printf("nombre fichier trop gros, %d\n", s);
 					assert(0);
 				}
@@ -202,7 +202,7 @@ WtArray WtArrayFromFile(char* fileName){
 		n = read(f, &c, sizeof(char));
 		if(n == sizeof(char))
 			if(c >= '0' && c <= '9'){
-				if(s*10 > MAX_TYPE - c + '0'){
+				if(s*10 > MAX_int - c + '0'){
 					printf("nombre dans fichier trop gros, %d\n", s);
 					assert(0);
 				}
@@ -211,7 +211,7 @@ WtArray WtArrayFromFile(char* fileName){
 			}
 			else if(c == ' ' || c == '\n' || c == EOF){
 				//Ici, un elem est reconnu, on augmente les cases du tableau auxquels ses bit correspondent
-				TYPE code = getCodeFromCharDict(getDictWtArray(w), s);
+				int code = getCodeFromCharDict(getDictWtArray(w), s);
 				assert(code != -1);
 				j = 0;
 				for(i = 0; i < getCodeSizeDict(getDictWtArray(w)); i++){
@@ -245,7 +245,7 @@ WtArray WtArrayFromFile(char* fileName){
 		n = read(f, &c, sizeof(char));
 		if(n == sizeof(char))
 			if(c >= '0' && c <= '9'){
-				if(s*10 > MAX_TYPE - c + '0'){
+				if(s*10 > MAX_int - c + '0'){
 					printf("nombre dans fichier trop gros, %d\n", s);
 					assert(0);
 				}
@@ -345,13 +345,13 @@ void printWtArray(WtArray w){
 
 /*-------------WtArray_MUTABLE----------------*/
 
-void insertWtArrayMutable(WtArray w, TYPE c, int pos){
+void insertWtArrayMutable(WtArray w, int c, int pos){
 	assert(w != NULL);
 
 	int nombreElemAvant = getNumberOfElemWtArray(w);
 	if(pos > nombreElemAvant)
 		pos = nombreElemAvant;
-	TYPE code = addElemDict(getDictWtArray(w), c);
+	int code = addElemDict(getDictWtArray(w), c);
 	assert(code != -1);
 	int codeSize = getCodeSizeDict(getDictWtArray(w));
 
@@ -505,7 +505,7 @@ void removeWtArrayMutable(WtArray w, int pos){
 }
 
 
-void modifyWtArrayMutable(WtArray w, TYPE c, int pos){
+void modifyWtArrayMutable(WtArray w, int c, int pos){
 	removeWtArrayMutable(w, pos);
 	insertWtArrayMutable(w, c, pos);
 }

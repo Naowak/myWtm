@@ -6,7 +6,7 @@ struct Wtpt{
 	Wtpt rightSon;
 	int high;
 	Dict dict;
-	TYPE nbElem;
+	int nbElem;
 };
 
 
@@ -21,7 +21,7 @@ static void setBitmapWtpt(Wtpt w, Bitmap b){
 	w->bitmap = b;
 }
 
-Wtpt getLeftSonWtpt(Wtpt w){
+static Wtpt getLeftSonWtpt(Wtpt w){
 	assert(w != NULL);
 	return w->leftSon;
 }
@@ -31,7 +31,7 @@ static void setLeftSonWtpt(Wtpt w, Wtpt leftSon){
 	w->leftSon = leftSon;
 }
 
-Wtpt getRightSonWtpt(Wtpt w){
+static Wtpt getRightSonWtpt(Wtpt w){
 	assert(w != NULL);
 	return w->rightSon;
 }
@@ -81,13 +81,13 @@ static void setDictWtpt(Wtpt w, Dict d){
 	w->dict = d;
 }
 
-TYPE getNumberOfElemWtpt(Wtpt w){
+int getNumberOfElemWtpt(Wtpt w){
 	assert(w != NULL);
 	return w->nbElem;
 }
 
 /* set the number of elem in the Wtpt */
-static void setNumberOfElemWtpt(Wtpt w, TYPE nb){
+static void setNumberOfElemWtpt(Wtpt w, int nb){
 	w->nbElem = nb;
 }
 
@@ -137,8 +137,8 @@ void freeWtpt(Wtpt w){
 	/!\ Attention, la collision n'est pas gérer. L'elem sera écrasé si
 	pos contient déjà une valeur. De plus un elem en plus sera compter
 */
-static void putElemIntoWtpt(Wtpt w, TYPE c, int pos){
-	TYPE code = addElemDict(getDictWtpt(w), c);
+static void putElemIntoWtpt(Wtpt w, int c, int pos){
+	int code = addElemDict(getDictWtpt(w), c);
 	int codeSize = getCodeSizeDict(getDictWtpt(w));
 
 	Wtpt tmp = w;
@@ -187,7 +187,7 @@ Wtpt WtptFromFile(char* fileName){
 	int f = open(fileName, O_RDONLY);
 
 	int n;
-	TYPE s = 0;
+	int s = 0;
 	int pos = 0;
 	char c;
 
@@ -195,7 +195,7 @@ Wtpt WtptFromFile(char* fileName){
 		n = read(f, &c, sizeof(char));
 		if(n == sizeof(char))
 			if(c >= '0' && c <= '9'){
-				if(s*10 > MAX_TYPE - c + '0'){
+				if(s*10 > MAX_int - c + '0'){
 					printf("nombre dans fichier trop gros, %d\n", s);
 					assert(0);
 				}
@@ -275,12 +275,12 @@ void printWtpt(Wtpt w){
 }
 
 
-void insertWtptMutable(Wtpt w, TYPE c, int pos){
+void insertWtptMutable(Wtpt w, int c, int pos){
 	assert(w != NULL);
 	if(pos > getNumberOfElemWtpt(w)) //On peut ajouter en premier, en dernier ou entre
 		pos = getNumberOfElemWtpt(w);
 
-	TYPE code = addElemDict(getDictWtpt(w), c);
+	int code = addElemDict(getDictWtpt(w), c);
 	int codeSize = getCodeSizeDict(getDictWtpt(w));
 
 	Wtpt tmp = w;
@@ -369,7 +369,7 @@ void removeWtptMutable(Wtpt w, int pos){
 }
 
 
-void modifyWtptMutable(Wtpt w, TYPE c, int pos){
+void modifyWtptMutable(Wtpt w, int c, int pos){
 	removeWtptMutable(w, pos);
 	insertWtptMutable(w, c, pos);
 }
